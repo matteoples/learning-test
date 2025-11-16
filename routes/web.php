@@ -30,8 +30,18 @@ Route::get('/auth/callback', function () {
 Route::middleware('auth')->group(callback: function(): void {
     Route::get('/dashboard', function () {
         $user = Auth::user();
-        return "Dashboard di @" . $user->name;
+        return view('dashboard', [
+            'user' => $user
+        ]);
     });
+
+    Route::post('/logout', function () {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect('/');
+    })->name('logout');
 });
 
 Route::get('/', function () {
