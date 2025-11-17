@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
@@ -34,6 +35,8 @@ Route::middleware('auth')->group(callback: function(): void {
             'user' => $user
         ]);
     });
+
+    Route::resource('students', StudentController::class);
 
     Route::post('/logout', function () {
         Auth::logout();
