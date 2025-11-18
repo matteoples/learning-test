@@ -9,24 +9,70 @@
 <body class="bg-[#FAFAFA] flex p-3">
 
     <!-- Sidebar verticale -->
-    <aside class="fixed left-0 top-0 w-[200px] h-screen flex flex-col px-5 py-5 bg-[#FAFAFA]">
-        <h1 class="font-bold text-lg mb-6">RipetiFlow</h1>
-        <nav class="flex flex-col gap-3 text-sm">
-            <a href="{{ url('/dashboard') }}" class="px-3 py-2 rounded hover:bg-[#FFFFFF]">Dashboard</a>
-            <a href="{{ url('/students') }}" class="px-3 py-2 rounded hover:bg-[#FFFFFF]">Studenti</a>
-            <a href="{{ url('/calendar') }}" class="px-3 py-2 rounded hover:bg-[#FFFFFF]">Calendario</a>
-            <a href="{{ url('/payments') }}" class="px-3 py-2 rounded hover:bg-[#FFFFFF]">Pagamenti</a>
+    <aside class="fixed left-0 top-0 w-[190px] h-screen flex flex-col px-3 py-5 bg-[#FAFAFA]">
+
+        <div class="flex items-center gap-2 py-5 pl-2">
+            <img src="{{ asset('img/logo.png') }}" alt="Logo" class="h-6">
+            <h1 class="font-bold text-lg m-0">RipetiFlow</h1>
+        </div>
+
+        
+        
+        <nav class="flex flex-col gap-2 text-sm">
+            
+            <a href="{{ url('/dashboard') }}"> 
+                <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 
+                        {{ Request::is('dashboard') ? 'bg-white border border-gray-100' : 'hover:bg-[#FFFFFF]' }}">
+                    
+                        <img src="{{ asset('img/dashboard.png') }}" alt="Modifica" class="w-5 h-5">
+                    Dashboard
+                </div>
+            </a>
+
+            <a href="{{ url('/students') }}"> 
+                    <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 
+                        {{ Request::is('students') ? 'bg-white border border-gray-100' : 'hover:bg-[#FFFFFF]' }}">    
+
+                    <img src="{{ asset('img/people.png') }}" alt="Modifica" class="w-5 h-5">
+                    Studenti
+                </div>
+            </a>
+
+            <a href="{{ url('/calendar') }}"> 
+                <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 
+                        {{ Request::is('calendar') ? 'bg-white border border-gray-100' : 'hover:bg-[#FFFFFF]' }}">
+
+                    <img src="{{ asset('img/calendar.png') }}" alt="Modifica" class="w-5 h-5">
+                    Calendario
+                </div>
+            </a>
+
+            <a href="{{ url('/payments') }}"> 
+                <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 
+                        {{ Request::is('payments') ? 'bg-white border border-gray-100' : 'hover:bg-[#FFFFFF]' }}">
+
+                    <img src="{{ asset('img/coin.png') }}" alt="Modifica" class="w-5 h-5">
+                    Pagamenti
+                </div>
+            </a>
+            
+            
         </nav>
-        <div class="mt-auto">
+        <div class="mt-auto w-full">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="w-full text-left px-3 py-2 rounded hover:bg-border-gray-200">Logout</button>
+                <button class="flex">
+                    <div class="px-3 py-3 rounded-[10px] hover:bg-[#FFFFFF] flex items-center gap-3">
+                        <img src="{{ asset('img/logout.png') }}" alt="Modifica" class="w-5 h-5">
+                        Logout
+                    </div>
+                </button>
             </form>
         </div>
     </aside>
 
     <!-- Contenuto principale -->
-    <main class="flex-1 pl-[200px]">
+    <main class="flex-1 pl-[180px]">
         <div class="bg-white border border-gray-200 rounded-[12px] flex flex-col gap-4">
             
             <!-- Header box: titolo + azioni -->

@@ -26,9 +26,9 @@ class Student extends Model
 
 
     // Relazione con lezioni
-    /* public function lessons() {
-        return $this->hasMany(Lesson::class);
-    } */
+    public function lessons() {
+        return $this->hasMany(Lesson::class)->orderBy('giorno', 'desc')->orderBy('ora_inizio', 'desc');;
+    } 
 
     // Relazione con pagamenti
     /* public function payments() {

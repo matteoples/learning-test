@@ -59,7 +59,7 @@ class StudentController extends Controller
 
         $student->update($request->all());
 
-        return redirect()->route('students.index')->with('success', 'Studente aggiornato con successo.');
+        return view('students.show', compact('student'))->with('success', 'Studente aggiornato con successo.');
     }
 
     // Elimina studente

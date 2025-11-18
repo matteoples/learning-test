@@ -30,13 +30,13 @@
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-semibold">Anagrafica</h2>
                 <a href="{{ route('students.edit', $student) }}"
-            class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                    Modifica
+                class="px-3 py-3 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition flex items-center justify-center">
+                    <img src="{{ asset('img/edit.png') }}" alt="Modifica" class="w-5 h-5">
                 </a>
             </div>
+
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-
                 {{-- Nome --}}
                 <div>
                     <p class="text-gray-500 text-sm">Nome</p>
@@ -97,9 +97,10 @@
         <div class="bg-white border border-gray-200 rounded-[12px] p-6 flex flex-col gap-4">
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-semibold">Pagamenti</h2>
+
                 <a href="{{ route('students.edit', $student) }}"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    +
+                class="px-3 py-3 bg-blue-600 border border-gray-200 rounded-lg text-gray-700 hover:bg-blue-700 transition flex items-center justify-center">
+                    <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
                 </a>
             </div>
             
@@ -112,14 +113,12 @@
                         $randomAmount = rand(50, 500);
                     @endphp
 
-                    <div>
-                        <p class="text-gray-500 text-xs">{{ $randomDate }}</p>
-                        <p class="font-medium">${{ $randomAmount }}</p>
+                    <div class="bg-[#FDFDFC] dark:bg-[#161615] p-3 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 flex flex-col h-full">
+                        <div class="flex justify-between items-center">
+                            <p class="text-gray-500 text-xs">{{ $randomDate }}</p>
+                            <p class="font-medium">${{ $randomAmount }}</p>
+                        </div>
                     </div>
-
-                    @if ($i < 4)
-                        <div class="border-t border-gray-100"></div>
-                    @endif
                 @endfor
             </div>
 
@@ -131,20 +130,36 @@
         <div class="bg-white border border-gray-200 rounded-[12px] p-6 flex flex-col gap-4 h-full">
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-semibold">Lezioni</h2>
-                <a href="{{ route('students.edit', $student) }}"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Nuova Lezione
+
+                <a href="{{ route('lessons.create', $student) }}"
+                class="px-3 py-3 bg-blue-600 border border-gray-200 rounded-lg text-gray-700 hover:bg-blue-700 transition flex items-center justify-center">
+                    <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
                 </a>
+
+                
             </div>
 
 
-            <div class="grid grid-cols-3 gap-3">
-                @for ($i = 0; $i < 5; $i++)
+            <div class="grid grid-cols-2 xl:grid-cols-3 gap-3">
+                @forelse ($student->lessons as $lesson)
+                    <a href="{{ route('lessons.show', $lesson) }}" class="block h-full">
+                        <div class="bg-[#FDFDFC] dark:bg-[#161615] p-3 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 flex flex-col h-full">
+                            <div class="flex justify-between items-center mb-1">
+                                <p class="text-gray-500 text-xs">{{ $lesson->getTextGiornoFormatted() }}</p>
+                                <p class="font-large"> {{ $lesson->durata() }} h</p>
+                            </div>
+                            <div class="pr-5 flex-1">
+                                <p class="font-medium">{{ $lesson->materia  ?? "N/A" }}</p>
+                                @isset($lesson->argomento)
+                                    <p class="text-gray-500 text-xs">{{ $lesson->argomento}}</p>
+                                @endisset
+                            </div>
+                        </div>
+                    </a>
+                @empty
                     @php
                         $randomDate = \Carbon\Carbon::today()->subDays(rand(0, 30))->format('d/m/Y');
                     @endphp
-
-
                     <div class="bg-[#FDFDFC] dark:bg-[#161615] border border-gray-200 rounded-[12px] p-5 flex flex-col gap-2 h-full">
                         <div class="flex justify-between items-center">
                             <div>
@@ -157,7 +172,8 @@
                         </div>
                         <p class="text-gray-500 text-xs">lorem ipsum </p>
                     </div>
-                @endfor
+
+                @endforelse
             </div>
         </div>
     </div>
