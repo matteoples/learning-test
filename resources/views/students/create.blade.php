@@ -1,17 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Aggiungi Studente')
 @section('page-title', 'Nuovo Studente')
+@section('back-button-route', route('students.index'))
+
 
 @section('action-buttons')
 <div class="flex gap-2">
-
-    {{-- Bottone Annulla (secondary) --}}
-    <a href="{{ route('students.index') }}"
-       class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-       Annulla
-    </a>
-
     {{-- Bottone Salva (primary) --}}
     <button type="submit" form="create-student-form"
             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">

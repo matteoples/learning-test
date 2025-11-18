@@ -67,16 +67,29 @@
             </div>
 
             {{-- Lezioni --}}
-            <div class="mt-9 flex flex-col gap-2 overflow-y-auto mb-2">
+            <div class="mt-9 flex flex-col gap-2 overflow-y-auto pb-10">
                 @foreach ($dayLessons as $lesson)
                     <a href="{{ route('lessons.show', $lesson->id) }}">
+
                         <div class="bg-[#FDFDFC] dark:bg-[#161615] p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 flex flex-col h-full">
-                            <p class="text-gray-500 text-xs">{{ $lesson->getOraInizioFormatted() }} - {{$lesson->getOraFineFormatted() }}</p>
-                            <p class="font-medium"> {{ $lesson->student->getNomeCompleto() ?? 'Studente senza nome' }} </p>
+                            {{-- Orario lezione (solo su lg) --}}
+                            <p class="text-gray-500 text-xs hidden justify-center lg:justify-start lg:block">
+                                {{ $lesson->getOraInizioFormatted() }} - {{ $lesson->getOraFineFormatted() }}
+                            </p>
+
+                            {{-- Nome completo su lg --}}
+                            <p class="font-medium hidden lg:block">
+                                {{ $lesson->student->getNomeCompleto() ?? 'Studente senza nome' }}
+                            </p>
+
+                            {{-- Iniziali centrate su md o più piccoli --}}
+                            <div class="lg:hidden flex items-center justify-center h-full text-md font-medium">
+                                {{ $lesson->student->getIniziali() ?? 'SN' }}
+                            </div>
                         </div>
                     </a>
                 @endforeach
-            </div>
+                </div>
         </div>
     @endfor
 </div>

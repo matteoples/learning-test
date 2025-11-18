@@ -1,15 +1,10 @@
 @extends('layouts.app')
 
 @section('page-title', 'Dettagli Studente')
+@section('back-button-route', route('students.index'))
 
 @section('action-buttons')
 <div class="flex gap-2">
-    {{-- Torna alla lista --}}
-    <a href="{{ route('students.index') }}"
-       class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-        Indietro
-    </a>
-
     {{-- Esporta --}}
     <a href="#"
 {{--        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
@@ -131,7 +126,7 @@
 
                 <a href="{{ route('lessons.create', $student) }}"
                 class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
-                    <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
+                    <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-3 h-3">
                     Nuovo
                 </a>
 

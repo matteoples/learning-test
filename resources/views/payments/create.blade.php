@@ -1,16 +1,11 @@
 @extends('layouts.app')
 
-@section('page-title', 'Nuovo Pagamento per ' . $student->nome . ' ' . $student->cognome)
+@section('page-title', 'Nuovo Pagamento per ' . $student->getNomeCompleto())
+@section('back-button-route', route('students.show', $student))
+
 
 @section('action-buttons')
 <div class="flex gap-2">
-
-    {{-- Bottone Annulla --}}
-    <a href="{{ route('students.show', $student) }}"
-       class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-        Annulla
-    </a>
-
     {{-- Bottone Salva --}}
     <button type="submit" form="create-payment-form"
             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">

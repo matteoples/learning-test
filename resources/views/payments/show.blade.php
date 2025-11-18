@@ -1,22 +1,15 @@
 @extends('layouts.app')
 
-@section('page-title', 'Pagamento di ' . $payment->student->nome . " " . $payment->student->cognome)
+@section('page-title', 'Pagamento di ' . $payment->student->getNomeCompleto())
+@section('back-button-route', route('students.show', $payment->student))
 
 @section('action-buttons')
 <div class="flex gap-2">
-
-    {{-- Torna allo studente --}}
-    <a href="{{ route('students.show', $payment->student) }}"
-       class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50">
-        Indietro
-    </a>
-
     {{-- Modifica --}}
     <a href="{{ route('payments.edit', $payment) }}"
        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
         Modifica
     </a>
-
 </div>
 @endsection
 

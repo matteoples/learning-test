@@ -51,4 +51,20 @@ class Student extends Model
         return null;
     }
 
+    public function getIniziali()
+    {
+        $iniziali = '';
+
+        if ($this->nome) {
+            $iniziali .= strtoupper(substr($this->nome, 0, 1));
+        }
+
+        if ($this->cognome) {
+            $iniziali .= strtoupper(substr($this->cognome, 0, 1));
+        }
+
+        return $iniziali ?: null;
+    }
+
+
 }

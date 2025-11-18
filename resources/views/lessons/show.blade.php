@@ -1,22 +1,15 @@
 @extends('layouts.app')
 
-@section('page-title', 'Dettagli Lezione di ' . $lesson->student->nome . ' ' . $lesson->student->cognome)
+@section('page-title', 'Dettagli Lezione di ' . $lesson->student->getNomeCompleto())
+@section('back-button-route', route('students.show', $lesson->student))
 
 @section('action-buttons')
 <div class="flex gap-2">
-
-    {{-- Bottone Indietro --}}
-    <a href="{{ route('students.show', $lesson->student) }}"
-       class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-        Indietro
-    </a>
-
     {{-- Bottone Salva --}}
     <a href="{{ route('lessons.edit', $lesson) }}"
        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         Modifica
     </a>
-
 </div>
 @endsection
 
