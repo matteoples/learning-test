@@ -12,6 +12,11 @@
         Esporta JSON
     </a>
 
+    {{-- <a href="{{ route('students.import.form') }}"
+    class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+        Importa da JSON
+    </a> --}}
+
     {{-- Primary Button --}}
     <a href="{{ route('students.create') }}"
         class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">

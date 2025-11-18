@@ -69,4 +69,103 @@ class StudentController extends Controller
         $student->delete();
         return redirect()->route('students.index')->with('success', 'Studente eliminato.');
     }
+
+
+
+    /**
+     * Mostra il form di importazione
+     */
+    public function showImportForm()
+    {
+        return view('students.import');
+    }
+
+    /**
+     * Importa uno studente completo da file JSON
+     */
+    public function importFromJson(Request $request)
+    {
+        $request->validate([
+            'json_files'   => 'required',
+            'json_files.*' => 'file|mimes:json,txt'
+        ]);
+
+        $files = $request->file('json_files');
+        $userId = auth()->id();
+
+        foreach ($files as $file) {
+
+            $json = file_get_contents($file->getRealPath());
+            $data = json_decode($json, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return back()->withErrors(['json_files' => 'File JSON non valido']);
+            }
+
+            if (!isset($data['studente']['nome'], $data['studente']['cognome'])) {
+                return back()->withErrors(['json_files' => 'Struttura JSON non valida']);
+            }
+
+            // CREA / UPDATE STUDENTE
+            $studente = Student::updateOrCreate(
+                [
+                    'nome'    => $data['studente']['nome'],
+                    'cognome' => $data['studente']['cognome'],
+                    'user_id' => $userId,
+                ],
+                [
+                    'telefono'  => $data['studente']['telefono'] ?? null,
+                    'classe'    => $data['studente']['classe'] ?? null,
+                    'indirizzo' => $data['studente']['indirizzo'] ?? null,
+                    'note'      => $data['studente']['note'] ?? null,
+                ]
+            );
+
+            // LEZIONI
+            if (!empty($data['lezioni'])) {
+                foreach ($data['lezioni'] as $lezioneData) {
+                    $studente->lessons()->updateOrCreate(
+                        [
+                            'user_id'    => $userId,
+                            'giorno'     => $lezioneData['data'],
+                            'ora_inizio' => $lezioneData['ora_inizio'],
+                            'ora_fine'   => $lezioneData['ora_fine'],
+                        ],
+                        [
+                            'materia'   => $lezioneData['materia'] ?? 'Non specificata',
+                            'argomento' => $lezioneData['argomento'] ?? null,
+                            'luogo'     => $lezioneData['luogo'] ?? 'online',
+                        ]
+                    );
+                }
+            }
+
+            // PAGAMENTI
+            if (!empty($data['pagamenti'])) {
+                foreach ($data['pagamenti'] as $pagamentoData) {
+
+                    $importo = str_replace(['.', ','], ['', '.'], $pagamentoData['importo']);
+
+                    $studente->payments()->updateOrCreate(
+                        [
+                            'user_id' => $userId,
+                            'data'    => $pagamentoData['data'],
+                            'importo' => $importo,
+                        ],
+                        [
+                            'modalita' => $pagamentoData['modalita'] ?? "Contanti", // <-- CORRETTO
+                            'note'     => $pagamentoData['note'] ?? null,
+                        ]
+                    );
+                }
+            }
+        }
+
+        return redirect()
+            ->route('students.index')
+            ->with('success', 'Importazione completata con successo!');
+    }
+
+
+
 }

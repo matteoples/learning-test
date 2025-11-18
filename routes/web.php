@@ -52,7 +52,16 @@ Route::middleware('auth')->group(callback: function(): void {
 
 
 
+    
+    // Importa uno studente da file JSON (con lezioni e pagamenti)
+    Route::get('/students/import', [StudentController::class, 'showImportForm'])
+        ->name('students.import.form');
+
+    Route::post('/students/import', [StudentController::class, 'importFromJson'])
+        ->name('students.import');
+
     Route::resource('students', StudentController::class);
+
     
 
     Route::get('/lessons', [LessonController::class, 'index'])->name('lessons.index');
@@ -72,6 +81,9 @@ Route::middleware('auth')->group(callback: function(): void {
     Route::get('/payments/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
     Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
     Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+
+
+
 
 
 
@@ -97,6 +109,9 @@ Route::middleware('auth')->group(callback: function(): void {
             'lessonsByDate' => $lessonsByDate
         ]);
     })->name('calendar.index');
+
+
+
    
 });
 
