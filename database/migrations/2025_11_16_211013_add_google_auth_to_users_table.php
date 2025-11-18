@@ -15,8 +15,6 @@ return new class extends Migration
             $table->longText('google_id')->nullable()->after('password');
             $table->longText('google_token')->nullable()->after('google_id');
             $table->longText('google_refresh_token')->nullable()->after('google_token');
-            
-            DB::statement('ALTER TABLE users MODIFY password VARCHAR(255) NULL');
         });
     }
 
@@ -31,8 +29,6 @@ return new class extends Migration
                 'google_token',
                 'google_refresh_token',
             ]);
-
-            DB::statement('ALTER TABLE users MODIFY password VARCHAR(255) NOT NULL');
         });
     }
 };
