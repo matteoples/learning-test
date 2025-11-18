@@ -65,7 +65,7 @@ class StudentController extends Controller
     // Elimina studente
     public function destroy(Student $student)
     {
-        $this->authorize('delete', $student); // opzionale
+        //$this->authorize('delete', $student); // opzionale
         $student->delete();
         return redirect()->route('students.index')->with('success', 'Studente eliminato.');
     }

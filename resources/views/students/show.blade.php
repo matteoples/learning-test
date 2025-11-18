@@ -98,28 +98,28 @@
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-semibold">Pagamenti</h2>
 
-                <a href="{{ route('students.edit', $student) }}"
+                <a href="{{ route('payments.create', $student) }}"
                 class="px-3 py-3 bg-blue-600 border border-gray-200 rounded-lg text-gray-700 hover:bg-blue-700 transition flex items-center justify-center">
                     <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
                 </a>
             </div>
             
             <div class="grid grid-cols-1 gap-3">
-                @for ($i = 0; $i < 5; $i++)
-                    @php
-                        // Genera una data random tra oggi e 30 giorni fa
-                        $randomDate = \Carbon\Carbon::today()->subDays(rand(0, 30))->format('d/m/Y');
-                        // Genera un importo random tra 50 e 500
-                        $randomAmount = rand(50, 500);
-                    @endphp
-
-                    <div class="bg-[#FDFDFC] dark:bg-[#161615] p-3 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 flex flex-col h-full">
-                        <div class="flex justify-between items-center">
-                            <p class="text-gray-500 text-xs">{{ $randomDate }}</p>
-                            <p class="font-medium">${{ $randomAmount }}</p>
+                @forelse ($student->payments as $payment)
+                    <a href="{{ route('payments.show', $payment) }}" class="block h-full">
+                        <div class="bg-[#FDFDFC] dark:bg-[#161615] p-3 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 flex flex-col h-full">
+                            <div class="flex justify-between items-center">
+                                <p class="text-gray-500 text-xs">{{ $payment->getTextGiornoFormatted() }}</p>
+                                <p class="font-medium">€ {{ $payment->importo }}</p>
+                            </div>
                         </div>
-                    </div>
-                @endfor
+                    </a>
+
+                @empty
+                    <p class="col-span-full text-center text-gray-500 py-10">
+                        Non ci sono pagamenti per questo studente da mostrare.
+                    </p>
+                @endforelse
             </div>
 
 
@@ -132,8 +132,9 @@
                 <h2 class="text-xl font-semibold">Lezioni</h2>
 
                 <a href="{{ route('lessons.create', $student) }}"
-                class="px-3 py-3 bg-blue-600 border border-gray-200 rounded-lg text-gray-700 hover:bg-blue-700 transition flex items-center justify-center">
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
                     <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
+                    Nuovo
                 </a>
 
                 
@@ -157,22 +158,9 @@
                         </div>
                     </a>
                 @empty
-                    @php
-                        $randomDate = \Carbon\Carbon::today()->subDays(rand(0, 30))->format('d/m/Y');
-                    @endphp
-                    <div class="bg-[#FDFDFC] dark:bg-[#161615] border border-gray-200 rounded-[12px] p-5 flex flex-col gap-2 h-full">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <p class="text-gray-500 text-xs">{{ $randomDate }}</p>
-                                <p class="font-medium">Informatica</p>
-                            </div>
-                            <div>
-                                <p class="font-large"> 1:30h</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-500 text-xs">lorem ipsum </p>
-                    </div>
-
+                    <p class="col-span-full text-center text-gray-500 py-10">
+                        Non ci sono lezioni per questo studente da mostrare.
+                    </p>
                 @endforelse
             </div>
         </div>

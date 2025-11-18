@@ -31,7 +31,7 @@ class Student extends Model
     } 
 
     // Relazione con pagamenti
-    /* public function payments() {
+    public function payments() {
         return $this->hasMany(Payment::class);
-    } */
+    } 
 }

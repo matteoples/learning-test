@@ -135,4 +135,18 @@
 
 </form>
 
+<div class="mt-6">
+    <div class="border-t border-gray-200 mb-6"></div>
+
+    <form action="{{ route('students.destroy', $student) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questo studente?');">
+        @csrf
+        @method('DELETE')
+        <div class="flex justify-end">
+            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+            Elimina studente
+        </button>
+        </div>
+    </form>
+</div>
+
 @endsection

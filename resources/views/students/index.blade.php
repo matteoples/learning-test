@@ -8,13 +8,14 @@
 
     {{-- Secondary Button --}}
     <a href="{{ route('students.create') }}"
-        class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+        class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition opacity-50 pointer-events-none">
         Esporta JSON
     </a>
 
     {{-- Primary Button --}}
     <a href="{{ route('students.create') }}"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
+        <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
         Nuovo
     </a>
 </div>
