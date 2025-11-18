@@ -50,6 +50,24 @@ class LessonController extends Controller
         return view('lessons.show', compact('lesson'));
     }
 
+    public function showByDate(Request $request)
+    {
+        $date = $request->input('date'); // formato YYYY-MM-DD
+        $userId = auth()->id();
+
+        // Recupera le lezioni del giorno solo per l'utente loggato
+        $lessons = Lesson::where('giorno', $date)
+            ->where('user_id', $userId)
+            ->get();
+
+        // Restituisce JSON
+        return response()->json([
+            'date' => $date,
+            'lessons' => $lessons
+        ]);
+    }
+
+
     public function edit(Lesson $lesson)
     {
         //$this->authorize('update', $lesson);

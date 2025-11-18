@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\User;
+use Carbon\Carbon;
+use App\Models\Lesson;
+use App\Models\Student;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\PaymentController;
@@ -47,8 +50,11 @@ Route::middleware('auth')->group(callback: function(): void {
     })->name('logout');
 
 
+
+
     Route::resource('students', StudentController::class);
     
+
     Route::get('/lessons', [LessonController::class, 'index'])->name('lessons.index');
     Route::get('/students/{student}/lessons/create', [LessonController::class, 'create'])
     ->name('lessons.create');
@@ -59,7 +65,7 @@ Route::middleware('auth')->group(callback: function(): void {
     Route::put('/lessons/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
     Route::delete('/lessons/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
 
-    //Route::resource('payments', PaymentController::class);
+
     Route::get('/students/{student}/payments/create', [PaymentController::class, 'create']) ->name('payments.create');;
     Route::post('/students/{student}/payments', [PaymentController::class, 'store']) ->name('payments.store');;
     Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
@@ -68,6 +74,29 @@ Route::middleware('auth')->group(callback: function(): void {
     Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
 
 
+
+    Route::get('/calendar', function () {
+        $user = Auth::user();
+        $today = Carbon::today();
+        $firstDay = $today->copy()->startOfMonth();
+        $lastDay = $today->copy()->endOfMonth();
+
+        // Prendi tutte le lezioni del mese per l'utente loggato
+        $lessons = Lesson::where('user_id', $user->id)
+            ->whereBetween('giorno', [$firstDay, $lastDay])
+            ->get();
+
+        // Raggruppa per data (YYYY-MM-DD)
+        $lessonsByDate = $lessons->groupBy(function ($lesson) {
+            return Carbon::parse($lesson->giorno)->toDateString();
+        });
+
+        return view('calendar.index', [
+            'user' => $user,
+            'today' => $today,
+            'lessonsByDate' => $lessonsByDate
+        ]);
+    })->name('calendar.index');
    
 });
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
@@ -19,6 +20,10 @@ class Student extends Model
         'note'
     ];
 
+    protected $casts = [
+        'data_nascita' => 'date',
+    ];
+
     // Relazione con tutor
     public function tutor() {
         return $this->belongsTo(User::class, 'user_id');
@@ -34,4 +39,16 @@ class Student extends Model
     public function payments() {
         return $this->hasMany(Payment::class);
     } 
+
+    public function getDataDiNascitaFormatted() {
+        return $this->data_nascita ? $this->data_nascita->format('d/m/Y') : null;
+    }
+
+    public function getNomeCompleto() {
+        if ($this->nome || $this->cognome) {
+            return trim($this->nome . ' ' . $this->cognome);
+        }
+        return null;
+    }
+
 }

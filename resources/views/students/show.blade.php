@@ -10,8 +10,8 @@
         Indietro
     </a>
 
-    {{-- Modifica --}}
-    <a href="{{ route('students.edit', $student) }}"
+    {{-- Esporta --}}
+    <a href="#"
 {{--        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
  --}}        class="px-4 py-2 bg-blue-600 text-white rounded-lg opacity-50 pointer-events-none">
         Esporta Dati
@@ -22,8 +22,6 @@
 @section('content')
 
 <div class="flex gap-4">
-
-    
     <div class="flex flex-col gap-4 w-[35%]">
         <div class="bg-white border border-gray-200 rounded-[12px] p-6 flex flex-col gap-4">
 
@@ -52,7 +50,7 @@
                 {{-- Data di nascita --}}
                 <div>
                     <p class="text-gray-500 text-sm">Data di nascita</p>
-                    <p class="font-medium">{{ $student->data_nascita ? $student->data_nascita->format('d/m/Y') : '-' }}</p>
+                    <p class="font-medium">{{ $student->getDataDiNascitaFormatted() ?? '-' }}</p>
                 </div>
 
                 {{-- Telefono --}}

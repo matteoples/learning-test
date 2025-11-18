@@ -76,7 +76,7 @@
         <div class="bg-white border border-gray-200 rounded-[12px] flex flex-col gap-4">
             
             <!-- Header box: titolo + azioni -->
-            <div class="flex justify-between items-center p-4 pb-0">
+            <div class="flex justify-between items-center p-4 pb-0 h-[60px]">
                 <h2 class="font-bold text-2xl pl-3">@yield('page-title')</h2>
                 @yield('action-buttons')
             </div>
