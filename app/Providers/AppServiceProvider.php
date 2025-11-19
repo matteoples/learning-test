@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,17 +20,23 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
+
     public function boot(): void
     {
-        // Crea automaticamente il symlink storage -> public/storage se non esiste
+        // --- Storage symlink ---
         $link = public_path('storage');
         if (!File::exists($link)) {
             try {
                 File::link(storage_path('app/public'), $link);
             } catch (\Exception $e) {
-                // Se fallisce (per esempio su Render gratuito), ignora
-                \Log::warning('Storage link non creato: ' . $e->getMessage());
+                Log::warning('Storage link non creato: ' . $e->getMessage());
             }
         }
+
+        // --- Forza HTTPS in produzione ---
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
+
 }
