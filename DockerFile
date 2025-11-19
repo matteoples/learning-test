@@ -1,8 +1,8 @@
-# --- Base PHP ---
+# --- Base PHP 8.2 FPM ---
 FROM php:8.2-fpm
 
-# --- Install system dependencies e Node 20 ---
-RUN apt-get update && apt-get install -y \
+# --- Installa dipendenze di sistema e Node 20 LTS ---
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
@@ -14,31 +14,33 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     build-essential \
     python3 \
+    gnupg \
+    ca-certificates \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd intl
 
-# --- Install Composer ---
+# --- Installa Composer ---
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # --- Set working directory ---
 WORKDIR /var/www/html
 
-# --- Copy entire project first (artisan exists) ---
+# --- Copia tutto il progetto prima di composer install (artisan presente) ---
 COPY . .
 
-# --- Install PHP dependencies ---
+# --- Installa le dipendenze PHP ---
 RUN composer install --no-dev --optimize-autoloader
 
-# --- Install Node dependencies e build assets Vite ---
+# --- Installa dipendenze Node e build Vite ---
 RUN npm install
 RUN npm run build
 
-# --- Set permissions for storage e cache ---
+# --- Imposta permessi ---
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# --- Espone porta per Render ---
-EXPOSE 8000
+# --- Espone porta 9000 (PHP-FPM predefinita) ---
+EXPOSE 9000
 
 # --- Avvia PHP-FPM ---
-CMD ["php-fpm"]
+CMD ["php-fpm", "-F", "-R"]
