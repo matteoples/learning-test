@@ -1,7 +1,7 @@
 # --- Base PHP ---
 FROM php:8.2-fpm
 
-# --- Install system dependencies ---
+# --- Install system dependencies e Node 20 ---
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     build-essential \
     python3 \
-    nodejs \
-    npm \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd intl
 
 # --- Install Composer ---
@@ -24,21 +24,21 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # --- Set working directory ---
 WORKDIR /var/www/html
 
-# --- Copy the entire project first (artisan exists now) ---
+# --- Copy entire project first (artisan exists) ---
 COPY . .
 
 # --- Install PHP dependencies ---
 RUN composer install --no-dev --optimize-autoloader
 
-# --- Install Node dependencies and build assets (Vite) ---
+# --- Install Node dependencies e build assets Vite ---
 RUN npm install
 RUN npm run build
 
-# --- Set permissions for storage and cache ---
+# --- Set permissions for storage e cache ---
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# --- Expose port for Render ---
+# --- Espone porta per Render ---
 EXPOSE 8000
 
-# --- Start PHP-FPM ---
+# --- Avvia PHP-FPM ---
 CMD ["php-fpm"]
