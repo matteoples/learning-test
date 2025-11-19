@@ -27,11 +27,6 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install
 RUN npm run build
 
-# --- Pulizia cache Laravel ---
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan view:clear
-
 # --- Set permissions ---
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
@@ -43,4 +38,4 @@ COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80 443 9000
 
 # --- Avvia nginx e php-fpm in foreground ---
-CMD ["sh", "-c", "php-fpm -F -R & nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "php artisan config:clear && php artisan cache:clear && php artisan view:clear && php-fpm -F -R & nginx -g 'daemon off;'"]
