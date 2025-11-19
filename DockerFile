@@ -12,7 +12,10 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libicu-dev \
-    nodejs npm \
+    build-essential \
+    python3 \
+    nodejs \
+    npm \
     && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd intl
 
 # --- Install Composer ---
@@ -21,19 +24,17 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # --- Set working directory ---
 WORKDIR /var/www/html
 
-# --- Copy PHP dependencies first (for caching Docker layers) ---
-COPY composer.json composer.lock ./
+# --- Copy the entire project first (artisan exists now) ---
+COPY . .
+
+# --- Install PHP dependencies ---
 RUN composer install --no-dev --optimize-autoloader
 
-# --- Copy Node files for Vite ---
-COPY package*.json ./
+# --- Install Node dependencies and build assets (Vite) ---
 RUN npm install
 RUN npm run build
 
-# --- Copy all app files ---
-COPY . .
-
-# --- Set permissions ---
+# --- Set permissions for storage and cache ---
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # --- Expose port for Render ---
