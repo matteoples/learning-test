@@ -9,6 +9,8 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    public $withinTransaction = false; // <- aggiungi questa riga
+    
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
