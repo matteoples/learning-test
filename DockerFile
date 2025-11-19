@@ -1,46 +1,41 @@
-# --- Base PHP 8.2 FPM ---
+# --- Base PHP FPM ---
 FROM php:8.2-fpm
 
-# --- Installa dipendenze di sistema e Node 20 LTS ---
+# --- Install system dependencies + Node 20 LTS + Nginx ---
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libpq-dev \
-    zip \
-    unzip \
-    git \
-    curl \
-    libicu-dev \
-    build-essential \
-    python3 \
-    gnupg \
-    ca-certificates \
+    libpng-dev libonig-dev libxml2-dev libpq-dev \
+    zip unzip git curl libicu-dev \
+    build-essential python3 gnupg ca-certificates \
+    nginx \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd intl
 
-# --- Installa Composer ---
+# --- Install Composer ---
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # --- Set working directory ---
 WORKDIR /var/www/html
 
-# --- Copia tutto il progetto prima di composer install (artisan presente) ---
+# --- Copy project files ---
 COPY . .
 
-# --- Installa le dipendenze PHP ---
+# --- Install PHP dependencies ---
 RUN composer install --no-dev --optimize-autoloader
 
-# --- Installa dipendenze Node e build Vite ---
+# --- Install Node dependencies and build Vite assets ---
 RUN npm install
 RUN npm run build
 
-# --- Imposta permessi ---
+# --- Set permissions ---
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# --- Espone porta 9000 (PHP-FPM predefinita) ---
-EXPOSE 9000
+# --- Configure Nginx ---
+RUN rm /etc/nginx/sites-enabled/default
+COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-# --- Avvia PHP-FPM ---
-CMD ["php-fpm", "-F", "-R"]
+# --- Expose ports (HTTP + HTTPS + PHP-FPM socket) ---
+EXPOSE 80 443 9000
+
+# --- Start both Nginx and PHP-FPM ---
+CMD service nginx start && php-fpm -F -R
