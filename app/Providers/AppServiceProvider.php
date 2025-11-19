@@ -32,11 +32,6 @@ class AppServiceProvider extends ServiceProvider
                 Log::warning('Storage link non creato: ' . $e->getMessage());
             }
         }
-
-        // --- Forza HTTPS in produzione ---
-        if ($this->app->environment('production')) {
-            URL::forceScheme('https');
-        }
     }
 
 }
