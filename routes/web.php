@@ -24,7 +24,7 @@ Route::get('/auth/callback', function () {
         'name' => $googleUser->name,
         'email' => $googleUser->email,
         'google_token' => $googleUser->token,
-        'google_refresh_token' => $googleUser->refreshToken,
+        'google_refresh_token' => $googleUser->refreshToken ?? null,
     ]);
 
     Auth::login($user);
@@ -35,6 +35,8 @@ Route::get('/auth/callback', function () {
 
 Route::middleware('auth')->group(callback: function(): void {
     Route::get('/dashboard', function () {
+        dd(Auth::user());
+        
         $user = Auth::user();
         return view('dashboard', [
             'user' => $user
