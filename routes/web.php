@@ -35,8 +35,8 @@ Route::get('/auth/callback', function () {
 
 Route::middleware('auth')->group(callback: function(): void {
     Route::get('/dashboard', function () {
-        dd(Auth::user());
-        
+        //dd(Auth::user());
+
         $user = Auth::user();
         return view('dashboard', [
             'user' => $user
