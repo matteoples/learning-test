@@ -32,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
                 Log::warning('Storage link non creato: ' . $e->getMessage());
             }
         }
+
+        if (env('APP_ENV') === 'production') {
+            URL::forceScheme('https');
+        }
     }
 
 }
