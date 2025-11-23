@@ -52,7 +52,8 @@ class CalendarController extends Controller
             $prevMonth = $firstDay->copy()->subMonth();
             $nextMonth = $firstDay->copy()->addMonth();
 
-            $lessons = Lesson::whereYear('giorno', $currentYear)
+            $lessons = Lesson::where('user_id', auth()->id())
+                ->whereYear('giorno', $currentYear)
                 ->whereMonth('giorno', $currentMonth)
                 ->orderBy('giorno')
                 ->orderBy('ora_inizio')
