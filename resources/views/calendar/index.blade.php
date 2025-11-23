@@ -42,16 +42,10 @@
 </div>
 @endsection
 
-
 @section('content')
-@switch($mode)
+@switch($currentMode)
     @case('weekly')
-        @include('calendar.week', [
-            'lessonsByDate' => $lessonsByDate,
-            'startOfWeek' => $startOfWeek,
-            'endOfWeek' => $endOfWeek,
-            'today' => $today
-        ])
+        @include('calendar.week', ['lessonsByDate' => $lessonsByDate])
         @break
 
     @case('daily')
@@ -68,9 +62,7 @@
             'prevMonth' => $prevMonth,
             'nextMonth' => $nextMonth,
             'currentMonth' => $currentMonth,
-            'currentYear' => $currentYear,
-            'today' => $today
+            'currentYear' => $currentYear
         ])
 @endswitch
 @endsection
-
