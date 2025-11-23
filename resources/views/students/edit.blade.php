@@ -7,9 +7,8 @@
 @section('action-buttons')
 <div class="flex gap-2">
     {{-- Bottone Salva (primary) --}}
-    <button type="submit" form="edit-student-form"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-        Salva
+    <button type="submit" form="edit-student-form" class="primary-button px-4 py-2">
+        Salva Modifiche
     </button>
 </div>
 @endsection
@@ -27,67 +26,48 @@
 
     <!-- Prima riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         {{-- Nome --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">
-                Nome <span class="text-red-500">*</span>
-            </label>
-            <input type="text" name="nome" value="{{ old('nome', $student->nome) }}" required
-                class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium"> Nome <span class="text-red-500">*</span> </label>
+            <input type="text" name="nome" class="input-field" required value="{{ old('nome', $student->nome) }}">
         </div>
 
         {{-- Cognome --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">
-                Cognome <span class="text-red-500">*</span>
-            </label>
-            <input type="text" name="cognome" value="{{ old('cognome', $student->cognome) }}" required
-                class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium"> Cognome <span class="text-red-500">*</span> </label>
+            <input type="text" name="cognome" class="input-field" required value="{{ old('cognome', $student->cognome) }}">
         </div>
-
     </div>
 
 
     <!-- Seconda riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         {{-- Data di nascita --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Data di nascita</label>
-            <input type="date" name="data_nascita"
-                value="{{ old('data_nascita', $student->data_nascita) }}"
-                class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Data di nascita</label>
+            <input type="date" name="data_nascita" class="input-field" value="{{ old('data_nascita', $student->data_nascita) }}">
         </div>
 
         {{-- Telefono --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Telefono</label>
-            <input type="text" name="telefono"
-                value="{{ old('telefono', $student->telefono) }}"
-                class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Telefono</label>
+            <input type="text" name="telefono" class="input-field" value="{{ old('telefono', $student->telefono) }}">                
         </div>
-
     </div>
 
 
     <!-- Terza riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         {{-- Email --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Email</label>
-            <input type="email" name="email"
-                value="{{ old('email', $student->email) }}"
-                class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Email</label>
+            <input type="text" name="email" class="input-field" value="{{ old('email', $student->email) }}">
         </div>
 
         {{-- Indirizzo --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Indirizzo</label>
-            <input type="text" name="indirizzo"
-                value="{{ old('indirizzo', $student->indirizzo) }}"
-                class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Indirizzo</label>
+            <input type="text" name="indirizzo" class="input-field" value="{{ old('indirizzo', $student->indirizzo) }}">                
         </div>
 
     </div>
@@ -98,30 +78,23 @@
 
         {{-- Scuola --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Scuola</label>
-            <input type="text" name="scuola"
-                value="{{ old('scuola', $student->scuola) }}"
-                class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Scuola</label>
+            <input type="text" name="scuola" class="input-field" value="{{ old('scuola', $student->scuola) }}">
         </div>
 
         {{-- Classe --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Classe</label>
-            <input type="text" name="classe"
-                value="{{ old('classe', $student->classe) }}"
-                class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Classe</label>
+            <input type="text" name="classe" class="input-field" value="{{ old('classe', $student->classe) }}">                
         </div>
-
     </div>
 
 
     <!-- Note -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Note</label>
-            <textarea name="note" rows="4"
-                class="border border-gray-200 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-blue-200 focus:outline-none">{{ old('note', $student->note) }}</textarea>
+            <label class="primary-text text-sm font-medium">Note</label>
+            <textarea name="note" rows="4" class="input-field">{{ old('note', $student->note) }}</textarea>
         </div>
 
     </div>
@@ -129,13 +102,14 @@
 </form>
 
 <div class="mt-6">
-    <div class="border-t border-gray-200 mb-6"></div>
-
-    <form action="{{ route('students.destroy', $student) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questo studente?');">
+    <div class="border-t box-border mb-6"></div>
+    <form action="{{ route('students.destroy', $student) }}" 
+    method="POST" 
+    onsubmit="return confirm('Sei sicuro di voler eliminare questo studente?');">
         @csrf
         @method('DELETE')
         <div class="flex justify-end">
-            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+            <button type="submit" class="destructive-button px-4 py-2">
             Elimina studente
         </button>
         </div>

@@ -7,21 +7,18 @@
 <div class="flex items-center gap-2">
 
     {{-- Secondary Button --}}
-    <a href="{{ route('students.create') }}"
-        class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition opacity-50 pointer-events-none">
+    <a href="{{ route('students.create') }}" class="primary-button px-4 py-2 opacity-50 pointer-events-none">
         Esporta JSON
     </a>
 
-    {{-- <a href="{{ route('students.import.form') }}"
-    class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+    {{-- <a href="{{ route('students.import.form') }}" class="primary-button opacity-50 pointer-events-none">
         Importa da JSON
     </a> --}}
 
     {{-- Primary Button --}}
-    <a href="{{ route('students.create') }}"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
+    <a href="{{ route('students.create') }}" class="primary-button px-4 py-2">
         <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
-        Nuovo
+        Nuovo Studente
     </a>
 </div>
 @endsection
@@ -33,13 +30,13 @@
 
     @forelse($students as $student)
         <a href="{{ route('students.show', $student) }}" class="block">
-            <div class="bg-[#FDFDFC] dark:bg-[#161615] p-4 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200">
-                <h3 class="text-lg font-semibold">{{ $student->nome }} {{ $student->cognome }}</h3>
-                <p class="text-sm mt-1">Classe: {{ $student->classe ?? '-' }}</p>
+            <div class="card p-4">
+                <h3 class="primary-text text-lg font-semibold">{{ $student->nome }} {{ $student->cognome }}</h3>
+                <p class="secondary-text text-sm mt-1">Classe: {{ $student->classe ?? '-' }}</p>
             </div>
         </a>
     @empty
-        <p class="col-span-full text-center text-gray-500 py-10">
+        <p class="secondary-text col-span-full text-center py-10">
             Non ci sono studenti da mostrare.
         </p>
     @endforelse

@@ -4,68 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RipetiFlow - @yield('title', 'Dashboard')</title>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#FAFAFA] flex p-3">
+<body class="bg-odd flex p-3">
 
     <!-- Sidebar verticale -->
-    <aside class="fixed left-0 top-0 w-[70px] lg:w-[190px] h-screen flex flex-col px-3 py-5 bg-[#FAFAFA] justify-center">
+    <aside class="fixed left-0 top-0 w-[70px] lg:w-[190px] h-screen flex flex-col px-3 py-5 justify-center">
 
         <div class="flex items-center gap-2 py-5 pl-2">
             <img src="{{ asset('img/logo.png') }}" alt="Logo" class="h-6">
-            <h1 class="font-bold text-lg m-0 hidden lg:inline">RipetiFlow</h1>
+            <h1 class="primary-text font-bold text-lg m-0 hidden lg:inline">RipetiFlow</h1>
         </div>
 
         <nav class="flex flex-col gap-2 text-sm">
             {{-- Dashboard --}}
-            <a href="{{ url('/dashboard') }}"> 
-                <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 
-                    {{ Request::is('dashboard*') ? 'bg-white border border-gray-100' : 'hover:bg-[#FFFFFF]' }}">
-                    
-                    <img src="{{ asset('img/dashboard.png') }}" alt="Dashboard" class="w-5 h-5">
-                    <span class="hidden lg:inline">Dashboard</span>
+            <a href="{{ url('/dashboard') }}">
+                <div class="px-3 py-3 rounded-[7px] flex items-center gap-3
+                    {{ Request::is('dashboard*') ? 'bg-even box-border border' : 'bg-odd' }}">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="" stroke="8a8a8aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span class="primary-text hidden lg:inline">Dashboard</span>
                 </div>
             </a>
+
 
             {{-- Studenti --}}
             <a href="{{ url('/students') }}"> 
                 <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 
-                    {{ Request::is('students*') ? 'bg-white border border-gray-100' : 'hover:bg-[#FFFFFF]' }}">    
+                    {{ Request::is('students*') ? 'bg-even box-border border' : 'bg-odd' }}">    
 
-                    <img src="{{ asset('img/people.png') }}" alt="Studenti" class="w-5 h-5">
-                    <span class="hidden lg:inline">Studenti</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="8a8a8aff" stroke="8a8a8aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="primary-text hidden lg:inline">Studenti</span>
                 </div>
             </a>
 
             {{-- Calendario --}}
             <a href="{{ url('/calendar') }}"> 
                 <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 
-                    {{ Request::is('calendar*') ? 'bg-white border border-gray-100' : 'hover:bg-[#FFFFFF]' }}">
+                    {{ Request::is('calendar*') ? 'bg-even box-border border' : 'bg-odd' }}">
 
-                    <img src="{{ asset('img/calendar.png') }}" alt="Calendario" class="w-5 h-5">
-                    <span class="hidden lg:inline">Calendario</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a8a8aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+
+                    <span class="primary-text hidden lg:inline">Calendario</span>
                 </div>
             </a>
-
-            {{-- Pagamenti --}}
-    {{--         <a href="# {{ url('/payments') }}"> 
-    --}}            <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 pointer-events-none opacity-50
-                    {{ Request::is('payments*') ? 'bg-white border border-gray-100' : 'hover:bg-[#FFFFFF]' }}">
-
-                    <img src="{{ asset('img/coin.png') }}" alt="Pagamenti" class="w-5 h-5">
-                    <span class="hidden lg:inline">Pagamenti</span>
-                </div>
-    {{--         </a>
-    --}}
         </nav>
 
+        
         <div class="mt-auto w-full">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button class="flex w-full">
-                    <div class="px-3 py-3 rounded-[10px] hover:bg-[#FFFFFF] flex items-center gap-3 w-full">
-                        <img src="{{ asset('img/logout.png') }}" alt="Logout" class="w-5 h-5">
-                        <span class="hidden lg:inline">Logout</span>
+                <button class="flex w-full cursor-pointer">
+                    <div class="px-3 py-3 rounded-[7px] flex items-center gap-3 hover:bg-even transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a8a8aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 3H6a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h4M16 17l5-5-5-5M19.8 12H9"/>
+                        </svg>
+                        <span class="primary-text hidden lg:inline">Logout</span>
                     </div>
                 </button>
             </form>
@@ -79,7 +81,7 @@
 
         @hasSection('back-button-route')
             <a href="@yield('back-button-route')"
-            class="px-3 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition self-start">
+            class="secondary-button self-start">
                 <div class="flex gap-2 items-center">
                     <img src="{{ asset('img/back.png') }}" alt="Indietro" class="w-3 h-3">
                     Indietro
@@ -87,15 +89,15 @@
             </a>
         @endif
 
-        <div class="bg-white border border-gray-200 rounded-[12px] flex flex-col gap-4">
+        <div class="bg-even border box-border rounded-[12px] flex flex-col gap-4">
 
             <!-- Header box: titolo + azioni -->
             <div class="flex justify-between items-center p-4 pb-0 h-[60px]">
-                <h2 class="font-bold text-2xl pl-3">@yield('page-title')</h2>
+                <h2 class="font-bold text-2xl pl-3 primary-text">@yield('page-title')</h2>
                 @yield('action-buttons')
             </div>
 
-            <div class="border-t border-gray-200"></div>
+            <div class="border-t box-border"></div>
 
             <!-- Contenuto della pagina -->
             <div class="p-6 pt-2">

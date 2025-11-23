@@ -6,6 +6,7 @@ use App\Models\Lesson;
 use App\Models\Student;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -84,36 +85,7 @@ Route::middleware('auth')->group(callback: function(): void {
     Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
     Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
 
-
-
-
-
-
-    Route::get('/calendar', function () {
-        $user = Auth::user();
-        $today = Carbon::today();
-        $firstDay = $today->copy()->startOfMonth();
-        $lastDay = $today->copy()->endOfMonth();
-
-        // Prendi tutte le lezioni del mese per l'utente loggato
-        $lessons = Lesson::where('user_id', $user->id)
-            ->whereBetween('giorno', [$firstDay, $lastDay])
-            ->get();
-
-        // Raggruppa per data (YYYY-MM-DD)
-        $lessonsByDate = $lessons->groupBy(function ($lesson) {
-            return Carbon::parse($lesson->giorno)->toDateString();
-        });
-
-        return view('calendar.index', [
-            'user' => $user,
-            'today' => $today,
-            'lessonsByDate' => $lessonsByDate
-        ]);
-    })->name('calendar.index');
-
-
-
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
    
 });
 

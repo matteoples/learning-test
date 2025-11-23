@@ -7,81 +7,66 @@
 @section('action-buttons')
 <div class="flex gap-2">
     {{-- Bottone Salva --}}
-    <button type="submit" form="create-payment-form"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+    <button type="submit" form="create-payment-form" class="primary-button px-4 py-2">
         Salva
     </button>
-
 </div>
 @endsection
 
 
 @section('content')
 
-<form id="create-payment-form" action="{{ route('payments.store', $student) }}" method="POST" class="flex flex-col gap-6">
+<form id="create-payment-form"
+    action="{{ route('payments.store', $student) }}"
+    method="POST"
+    class="flex flex-col gap-6">
     @csrf
 
     <!-- Prima riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         {{-- Giorno --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">
-                Data <span class="text-red-500">*</span>
-            </label>
-            <input type="date" name="data" required
-                   class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Data <span class="text-red-500">*</span></label>
+            <input type="date" name="data" class="input-field" required value="{{ now()->format('Y-m-d') }}">
         </div>
 
         <div class="flex flex-row gap-4">
             {{-- Importo --}}
             <div class="flex flex-col gap-1 flex-1">
-                <label class="text-sm font-medium">
-                    Importo <span class="text-red-500">*</span>
-                </label>
-                <input type="number" name="importo" required
-                    class="border border-gray-200 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-blue-200 focus:outline-none">
+                <label class="primary-text text-sm font-medium"> Importo <span class="text-red-500">*</span></label>
+                <input type="number" name="importo" class="input-field" required>
             </div>
 
             {{-- Numero  ore --}}
             <div class="flex flex-col gap-1 flex-1">
-                <label class="text-sm font-medium">
-                    Numero Ore <span class="text-red-500">*</span>
-                </label>
-                <input type="number" name="numero_ore" required
-                    class="border border-gray-200 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-blue-200 focus:outline-none">
+                <label class="primary-text text-sm font-medium">Numero Ore <span class="text-red-500">*</span></label>
+                <input type="number" name="numero_ore" class="input-field" required>
             </div>
         </div>
-
-        
-
     </div>
 
 
     <!-- Seconda riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         {{-- Materia --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Modalità <span class="text-red-500">*</span></label>
-            <select name="modalita"
-                    class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none required">
+            <label class="primary-text text-sm font-medium">Modalità <span class="text-red-500">*</span></label>
+            <select name="modalita" class="input-field">
                 <option value="">Seleziona una modalità</option>
                 <option value="Contanti">Contanti</option>
                 <option value="Bonifico">Bonifico</option>
                 <option value="PayPal">PayPal</option>
                 <option value="Satispay">Satispay</option>
                 <option value="Revolut">Revolut</option>
-                {{-- aggiungi altre materie qui --}}
+                {{-- aggiungi altre opzioni qui --}}
             </select>
         </div>
     </div>
 
     <!-- Terza riga -->
     <div>
-        <label class="text-sm font-medium">Note</label>
-        <textarea name="note" rows="4"
-                  class="border border-gray-200 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-blue-200 focus:outline-none"></textarea>
+        <label class="primary-text text-sm font-medium">Note</label>
+        <textarea name="note" rows="4" class="input-field"></textarea>
     </div>
 
 </form>

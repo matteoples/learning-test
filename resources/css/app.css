@@ -9,3 +9,121 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+
+/* Light mode */
+:root {
+    --bg-even: #FFFFFF;
+    --bg-odd: #F8F8F8;
+    --bg-hover: #F3F4F6;                   
+
+
+    --box-border: #F0F1F2;
+    --primary-text: #000000;
+    --secondary-text: #A1A6B1;
+
+    --accent-color: #2c99c3;
+    --accent-color-hover: #1d6986;
+    --accent-color-2: #F6941D;
+}
+
+/* Dark mode */
+.dark {       
+    --bg-even: #1E1F21;
+    --bg-odd: #292A2E;   
+    --bg-hover: #1E1F21;    
+
+    --box-border: #3B3D42;
+    --primary-text: #FFFFFF;
+    --secondary-text:#636875;
+
+    --accent-color: #237291;
+    --accent-color-hover: #174f65;
+    --accent-color-2: #d77f14;
+}
+
+
+
+
+@layer utilities {
+    .bg-odd {
+        background-color: var(--bg-odd) !important;
+    }
+    .bg-even {
+        background-color: var(--bg-even) !important;
+    }
+    .box-border {
+        border-color: var(--box-border);
+    }
+    .primary-text {
+        color: var(--primary-text);
+    }
+    .secondary-text {
+        color: var(--secondary-text);
+    }
+}
+
+
+
+
+.secondary-button {
+    @apply px-3 py-2 rounded-lg flex items-center gap-2 transition;
+    color: var(--primary-text);
+    border: 2px solid var(--box-border);
+    background-color: transparent;
+}
+.secondary-button:hover {
+    background-color: var(--bg-hover); /* o una variabile hover */
+}
+
+
+.primary-button {
+    @apply rounded-lg flex items-center gap-2 transition justify-center;
+    color: #ffffff;
+    border: 2px solid var(--accent-color);
+    background-color: var(--accent-color);
+}
+.primary-button:hover {
+    background-color: var(--accent-color-hover);
+    border-color: var(--accent-color-hover);
+}
+.inline-button {
+    background-color: var(--accent-color);
+    color: var(--primary-text);
+}
+
+.destructive-button {
+    @apply rounded-lg flex items-center gap-2 transition justify-center;
+    color: #ffffff;
+    border: 2px solid #C9372C;
+    background-color: #C9372C;
+}
+.destructive-button:hover {
+    background-color: #872821;
+    border-color: #872821;
+}
+
+.section {
+    @apply p-6 rounded-lg border flex flex-col gap-4 transition;
+    border-color: var(--box-border );
+}
+
+.card {
+    @apply rounded-lg transition-colors duration-200 border box-border w-full;
+    background-color: var(--bg-even);
+    border-color: var(--box-border );
+}
+
+.card:hover {
+    background-color: var(--bg-odd);
+}
+
+.input-field {
+    @apply border box-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-100 focus:outline-none w-full;
+    color: var(--primary-text);
+    background-color: var(--bg-even);
+    border-color: var(--box-border);
+}
+
+
+

@@ -1,12 +1,12 @@
 @php
 use Carbon\Carbon;
 
-// Ottieni la data di riferimento per la settimana (parametro GET), altrimenti oggi
+// Ottieni la data di riferimento per la settimana (GET param oppure oggi)
 $referenceDate = request('startOfWeek', Carbon::today()->toDateString());
 $startOfWeek = Carbon::parse($referenceDate)->startOfWeek(); // lunedì
 $endOfWeek = $startOfWeek->copy()->endOfWeek(); // domenica
 
-// Prepara array dei giorni della settimana
+// Array delle date della settimana
 $daysOfWeek = [];
 for ($d = $startOfWeek->copy(); $d->lte($endOfWeek); $d->addDay()) {
     $daysOfWeek[] = $d->toDateString();
@@ -15,60 +15,76 @@ for ($d = $startOfWeek->copy(); $d->lte($endOfWeek); $d->addDay()) {
 // Settimana precedente / successiva
 $prevWeek = $startOfWeek->copy()->subWeek();
 $nextWeek = $startOfWeek->copy()->addWeek();
+
 $today = Carbon::today();
 @endphp
 
 {{-- Navigazione settimane --}}
 <div class="flex justify-between items-center mb-4">
     <a href="{{ route('calendar.index', ['mode'=>'weekly', 'startOfWeek'=>$prevWeek->toDateString()]) }}"
-       class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+       class="secondary-button px-4 py-2">
         &laquo; {{ $prevWeek->format('d M') }} - {{ $prevWeek->copy()->endOfWeek()->format('d M') }}
     </a>
 
-    <h2 class="text-lg font-semibold">
+    <h2 class="primary-text text-lg font-semibold">
         {{ $startOfWeek->format('d M') }} - {{ $endOfWeek->format('d M Y') }}
     </h2>
 
     <a href="{{ route('calendar.index', ['mode'=>'weekly', 'startOfWeek'=>$nextWeek->toDateString()]) }}"
-       class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+       class="secondary-button px-4 py-2">
         {{ $nextWeek->format('d M') }} - {{ $nextWeek->copy()->endOfWeek()->format('d M') }} &raquo;
     </a>
 </div>
 
-
-{{-- Header giorni --}}
-<div class="grid grid-cols-7 text-center border border-gray-300 rounded-t-lg overflow-hidden">
+{{-- Header giorni della settimana --}}
+<div class="grid grid-cols-7 text-center border box-border rounded-t-lg overflow-hidden">
     @foreach (['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'] as $day)
-        <div class="py-2 font-semibold bg-gray-50">{{ $day }}</div>
+        <div class="py-2 primary-text font-semibold bg-even last:border-r-0">{{ $day }}</div>
     @endforeach
 </div>
 
-{{-- Griglia settimana --}}
-<div class="grid grid-cols-7 border border-gray-300 border-t-0 rounded-b-lg">
+{{-- Griglia della settimana --}}
+<div class="grid grid-cols-7 border box-border border-t-0 rounded-b-lg">
     @foreach ($daysOfWeek as $date)
         @php
             $dayLessons = $lessonsByDate[$date] ?? [];
+            // Ordina le lezioni per ora_inizio
+            $dayLessons = collect($dayLessons)->sortBy('ora_inizio');
             $isToday = Carbon::parse($date)->isSameDay($today);
-            $dayNum = Carbon::parse($date)->day;
+            $dayNumber = Carbon::parse($date)->day;
         @endphp
 
-        <div class="border-r border-b border-gray-300 relative p-2 flex flex-col min-h-[150px]">
+        <div class="border-r border-b box-border relative p-2 flex flex-col min-h-[150px]">
             {{-- Numero del giorno --}}
-            <div class="absolute top-3 right-2 text-sm">
-                @if($isToday)
-                    <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">{{ $dayNum }}</span>
+            <div class="absolute top-4 right-4 text-sm">
+                @if ($isToday)
+                    <span class="px-2 py-1.5 inline-button rounded-full font-semibold">
+                        {{ $dayNumber }}
+                    </span>
                 @else
-                    <span class="text-gray-600">{{ $dayNum }}</span>
+                    <span class="secondary-text">{{ $dayNumber }}</span>
                 @endif
             </div>
 
             {{-- Lezioni --}}
-            <div class="mt-9 flex flex-col gap-2 overflow-y-auto pb-10">
+            <div class="mt-9 flex flex-col gap-2 overflow-y-auto pb-6">
                 @foreach ($dayLessons as $lesson)
                     <a href="{{ route('lessons.show', $lesson->id) }}">
-                        <div class="bg-[#FDFDFC] dark:bg-[#161615] p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 flex flex-col h-full">
-                            <p class="text-gray-500 text-xs">{{ $lesson->getOraInizioFormatted() }} - {{$lesson->getOraFineFormatted()}}</p>
-                            <p class="font-medium">{{ $lesson->student->getNomeCompleto() ?? 'Studente senza nome' }}</p>
+                        <div class="card p-2">
+                            {{-- Orario (desktop) --}}
+                            <p class="secondary-text text-xs hidden lg:block">
+                                {{ $lesson->getOraInizioFormatted() }} - {{ $lesson->getOraFineFormatted() }}
+                            </p>
+
+                            {{-- Nome completo (desktop) --}}
+                            <p class="primary-text font-medium hidden lg:block">
+                                {{ $lesson->student->getNomeCompleto() ?? 'Studente senza nome' }}
+                            </p>
+
+                            {{-- Iniziali (mobile) --}}
+                            <div class="primary-text lg:hidden flex items-center justify-center h-full text-md font-medium">
+                                {{ $lesson->student->getIniziali() ?? 'SN' }}
+                            </div>
                         </div>
                     </a>
                 @endforeach

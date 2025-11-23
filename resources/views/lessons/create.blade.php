@@ -6,13 +6,11 @@
 @section('action-buttons')
 <div class="flex gap-2">
     {{-- Bottone Salva --}}
-    <button type="submit" form="create-lesson-form"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+    <button type="submit" form="create-lesson-form" class="primary-button px-4 py-2">
         Salva
     </button>
 </div>
 @endsection
-
 
 @section('content')
 
@@ -21,57 +19,45 @@
 
     <!-- Prima riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         {{-- Giorno --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">
+            <label class="primary-text text-sm font-medium">
                 Giorno <span class="text-red-500">*</span>
             </label>
-            <input type="date" name="giorno" required
-                   class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <input type="date" name="giorno" required value="{{ now()->format('Y-m-d') }}" class="input-field">
         </div>
 
         <div class="flex flex-row gap-4">
             {{-- Ora inizio --}}
             <div class="flex flex-col gap-1 flex-1">
-                <label class="text-sm font-medium">
+                <label class="primary-text text-sm font-medium">
                     Ora inizio <span class="text-red-500">*</span>
                 </label>
-                <input type="time" name="ora_inizio" required
-                    class="border border-gray-200 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-blue-200 focus:outline-none">
+                <input type="time" name="ora_inizio" required value="10:00" class="input-field w-full">
             </div>
 
             {{-- Ora fine --}}
             <div class="flex flex-col gap-1 flex-1">
-                <label class="text-sm font-medium">
+                <label class="primary-text text-sm font-medium">
                     Ora fine <span class="text-red-500">*</span>
                 </label>
-                <input type="time" name="ora_fine" required
-                    class="border border-gray-200 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-blue-200 focus:outline-none">
+                <input type="time" name="ora_fine" required value="11:00" class="input-field w-full">
             </div>
         </div>
-
-        
-
     </div>
-
 
     <!-- Seconda riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
         {{-- Luogo --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Luogo</label>
-            <input type="text" name="luogo"
-                   class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Luogo</label>
+            <input type="text" name="luogo" class="input-field">
         </div>
-
 
         {{-- Materia --}}
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-medium">Materia</label>
-            <select name="materia"
-                    class="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+            <label class="primary-text text-sm font-medium">Materia</label>
+            <select name="materia" class="input-field">
                 <option value="">Seleziona una materia</option>
                 <option value="Matematica">Matematica</option>
                 <option value="Telecomunicazioni">Telecomunicazioni</option>
@@ -81,18 +67,13 @@
                 {{-- aggiungi altre materie qui --}}
             </select>
         </div>
-        
-        
     </div>
-
 
     <!-- Terza riga -->
-    <div>
-        <label class="text-sm font-medium">Argomento</label>
-        <textarea name="argomento" rows="4"
-                  class="border border-gray-200 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-blue-200 focus:outline-none"></textarea>
+    <div class="flex flex-col gap-1">
+        <label class="primary-text text-sm font-medium">Argomento</label>
+        <textarea name="argomento" rows="4" class="input-field w-full"></textarea>
     </div>
-
 </form>
 
 @endsection

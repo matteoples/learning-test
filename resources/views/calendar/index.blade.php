@@ -1,29 +1,27 @@
 @extends('layouts.app')
 
 @php
-    use Carbon\Carbon;
-    $firstDay = $today->copy()->startOfMonth(); // Primo giorno del mese
-    $lastDay = $today->copy()->endOfMonth(); // Ultimo giorno del mese
-    $startWeekDay = $firstDay->dayOfWeekIso; // Giorno della settimana in cui inizia (0=Mon) // 1 (lun) - 7 (dom)
-    $daysInMonth = $today->daysInMonth; // Totale giorni nel mese
+    $currentMode = request('mode', 'monthly');
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
 @endphp
 
 
 @section('page-title', 'Calendario')
 
+
+
 @section('action-buttons')
 <div class="flex gap-2">
     {{-- Picker Modalità --}}
     <form action="#" method="GET">
-        <div class="inline-flex bg-gray-100 rounded-lg p-1">
-
+        <div class="inline-flex bg-odd rounded-lg p-1">
             @php
                 $modes = [
                     'monthly' => 'Mensile',
                     'weekly' => 'Settimanale',
                     //'daily' => 'Giornaliero'
                 ];
-                $currentMode = request('mode', 'monthly');
             @endphp
 
             @foreach ($modes as $value => $label)
@@ -33,33 +31,46 @@
                     value="{{ $value }}"
                     class="px-4 py-2 rounded-md text-sm font-medium transition
                         {{ $currentMode === $value
-                            ? 'bg-white text-black shadow'
-                            : 'text-gray-600 hover:bg-gray-200'
+                            ? 'bg-even primary-text shadow cursor-default'
+                            : 'primary-text hover:bg-odd cursor-pointer'
                         }}">
                     {{ $label }}
                 </button>
             @endforeach
-
         </div>
     </form>
-
 </div>
 @endsection
 
 
-
 @section('content')
-@switch($currentMode)
+@switch($mode)
     @case('weekly')
-        @include('calendar.week', ['lessonsByDate' => $lessonsByDate])
+        @include('calendar.week', [
+            'lessonsByDate' => $lessonsByDate,
+            'startOfWeek' => $startOfWeek,
+            'endOfWeek' => $endOfWeek,
+            'today' => $today
+        ])
         @break
+
     @case('daily')
-        @include('calendar.day', ['date' => $currentDate, 'lessons' => $lessonsByDate[$currentDate] ?? []])
+        @include('calendar.day', [
+            'date' => $today->toDateString(),
+            'lessons' => $lessonsByDate[$today->toDateString()] ?? []
+        ])
         @break
+
     @default
-        @include('calendar.month', ['lessonsByDate' => $lessonsByDate])
+        @include('calendar.month', [
+            'firstDay' => $firstDay,
+            'lessonsByDate' => $lessonsByDate,
+            'prevMonth' => $prevMonth,
+            'nextMonth' => $nextMonth,
+            'currentMonth' => $currentMonth,
+            'currentYear' => $currentYear,
+            'today' => $today
+        ])
 @endswitch
 @endsection
-
-
 
