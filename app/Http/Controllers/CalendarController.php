@@ -21,13 +21,15 @@ class CalendarController extends Controller
             $endOfWeek = $startOfWeek->copy()->endOfWeek(Carbon::SUNDAY);
 
             // Carica lezioni tra inizio e fine settimana, ordinate
-            $lessons = Lesson::whereBetween('giorno', [
+            $lessons = Lesson::where('user_id', auth()->id())
+                ->whereBetween('giorno', [
                     $startOfWeek->toDateString(),
                     $endOfWeek->toDateString(),
                 ])
                 ->orderBy('giorno')
                 ->orderBy('ora_inizio')
                 ->get();
+
 
             // Raggruppa per giorno
             $lessonsByDate = $lessons->groupBy(function ($lesson) {
