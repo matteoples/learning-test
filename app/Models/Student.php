@@ -66,5 +66,60 @@ class Student extends Model
         return $iniziali ?: null;
     }
 
+    public function getTotalPayments() {
+        return floor($this->payments()->sum('importo'));
+    }
+
+    public function getTotalLessons() {
+        // somma delle ore in formato decimale
+        $totalHours = $this->lessons->sum(function ($lesson) {
+            $start = Carbon::parse($lesson->ora_inizio);
+            $end = Carbon::parse($lesson->ora_fine);
+            return $start->floatDiffInHours($end);
+        });
+
+        return $totalHours;
+    }
+
+    public function getTotalLessonsFormatted() {
+        $totalHours =  $this->getTotalLessons();
+
+        // parte intera delle ore
+        $hours = floor($totalHours);
+
+        // minuti ricavati dalla parte decimale
+        $minutes = round(($totalHours - $hours) * 60);
+
+        if ($minutes==0) {
+            return "{$hours}h";
+        }
+        return "{$hours}h {$minutes}min";
+    }
+
+    public function hasDebt()
+    {
+        return $this->getDebitHours() > 0;
+    }
+
+    public function getCreditHours()
+    {
+        $paidHours = $this->payments()->sum('numero_ore');
+        $doneHours = $this->getTotalLessons();
+
+        $credit = $paidHours - $doneHours;
+
+        return $credit > 0 ? $credit : 0;
+    }
+
+    public function getDebitHours()
+    {
+        $paidHours = $this->payments()->sum('numero_ore');
+        $doneHours = $this->getTotalLessons();
+
+        $debit = $doneHours - $paidHours;
+
+        return $debit > 0 ? $debit : 0;
+    }
+
 
 }

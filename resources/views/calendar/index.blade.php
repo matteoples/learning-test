@@ -66,3 +66,17 @@
         ])
 @endswitch
 @endsection
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Tailwind 'sm' breakpoint = 640px
+        if (window.innerWidth < 640) {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') !== 'weekly') {
+                urlParams.set('mode', 'weekly');
+                window.location.search = urlParams.toString();
+            }
+        }
+    });
+</script>

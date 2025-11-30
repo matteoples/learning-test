@@ -15,9 +15,8 @@
 
 @section('content')
 
-<div class="flex gap-4">
-    <div class="flex flex-col gap-4 w-[35%]">
-
+<div class="flex flex-col lg:flex-row gap-4">
+    <div class="flex flex-col gap-4 w-full lg:w-[40%]">
         <div class="section">
             <div class="flex justify-between items-center">
                 <h2 class="primary-text text-xl font-semibold">Anagrafica</h2>
@@ -27,7 +26,7 @@
             </div>
 
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 gap-4 mt-4">
                 {{-- Nome --}}
                 <div>
                     <p class="secondary-text text-sm">Nome</p>
@@ -94,13 +93,13 @@
                 </a>
             </div>
             
-            <div class="grid grid-cols-1 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                 @forelse ($student->payments as $payment)
                     <a href="{{ route('payments.show', $payment) }}" class="block h-full">
                         <div class="card p-3 h-full">
                             <div class="flex justify-between items-center">
                                 <p class="secondary-text text-xs">{{ $payment->getTextGiornoFormatted() }}</p>
-                                <p class="primary-text font-medium">€ {{ $payment->importo }}</p>
+                                <p class="primary-text font-medium">€ {{ (int) $payment->importo }}</p>
                             </div>
                         </div>
                     </a>
@@ -116,7 +115,63 @@
         </div>
     </div>
 
-    <div class="flex flex-col w-full">
+    <div class="flex flex-col w-full gap-4">
+        <div class="flex flex-col md:flex-row gap-4">
+
+            <div class="section w-full">
+                <div class="flex justify-between">
+                    <p class="primary-text font-medium">Totale pagamenti</p>
+                    <p class="primary-text"> € {{ $student->getTotalPayments() }} </p>
+                </div>
+                <div class="flex justify-between">
+                    <p class="primary-text font-medium">Totale ore fatte</p>
+                    <p class="primary-text"> {{ $student->getTotalLessonsFormatted() }} </p>
+                </div>
+            </div>
+
+            <div class="section w-full">
+                <div class="flex justify-between">
+                    <p class="primary-text font-medium">
+                        Importo
+                        @if ($student->hasDebt())
+                            Debito
+                        @else
+                            Credito
+                        @endif
+                    </p>
+
+                    <p class="primary-text">
+                        € N/A
+                        {{-- @if ($student->hasDebt())
+                            {{ $student->getDebitHours() * 1 }}
+                        @else
+                            {{ $student->getCreditHours() * 1 }} 
+                        @endif --}}
+                    </p>
+                </div>
+
+                <div class="flex justify-between">
+                    <p class="primary-text font-medium">
+                        @if ($student->hasDebt())
+                            Ore di Debito
+                        @else
+                            Ore di Credito
+                        @endif
+                    </p>
+
+                    <p class="primary-text">
+                        @if ($student->hasDebt())
+                            {{ $student->getDebitHours() }}h
+                        @else
+                            {{ $student->getCreditHours() }}h
+                        @endif
+                    </p>
+                </div>
+
+                <p class="text-xs text-gray-500"> L'addebito dell'ora avviene al momento della prenotazione.</p>
+            </div>
+        </div>
+
         <div class="section p-6 flex flex-col gap-4 h-full">
             <div class="flex justify-between items-center">
                 <h2 class="primary-text text-xl font-semibold">Lezioni</h2>
@@ -129,7 +184,7 @@
             </div>
 
 
-            <div class="grid grid-cols-2 xl:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                 @forelse ($student->lessons as $lesson)
                     <a href="{{ route('lessons.show', $lesson) }}" class="block h-full">
                         <div class="card p-3 h-full">
