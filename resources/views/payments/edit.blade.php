@@ -7,7 +7,8 @@
 <div class="flex gap-2">
     {{-- Bottone Salva --}}
     <button type="submit" form="create-payment-form" class="primary-button px-4 py-2">
-        Salva Modifiche
+        <span class="md:hidden">Salva</span>
+        <span class="hidden md:inline">Salva Modifiche</span>
     </button>
 </div>
 @endsection
@@ -45,7 +46,7 @@
                 <label class="primary-text text-sm font-medium">
                     Numero Ore <span class="text-red-500">*</span>
                 </label>
-                <input type="number" name="numero_ore" required value="{{ $payment->numero_ore }}" class="input-field w-full">
+                <input type="number" step="0.25" name="numero_ore" required value="{{ $payment->numero_ore }}" class="input-field w-full">
             </div>
         </div>
     </div>

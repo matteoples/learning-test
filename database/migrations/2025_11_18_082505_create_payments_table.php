@@ -27,7 +27,7 @@ return new class extends Migration
             $table->date('data');                    // data pagamento
             $table->string('modalita');             // es. bonifico, contanti, ecc.
             $table->decimal('importo', 8, 2);       // importo pagato
-            $table->integer('numero_ore')->nullable(); 
+            $table->float('numero_ore')->nullable(); 
             $table->text('note')->nullable();
 
             $table->timestamps();

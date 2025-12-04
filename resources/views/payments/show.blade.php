@@ -33,7 +33,7 @@
             {{-- Numero ore --}}
             <div class="flex flex-col gap-1 flex-1">
                 <label class="primary-text text-sm font-medium">Numero Ore</label>
-                <input type="number" value="{{ $payment->numero_ore }}" readonly class="input-field w-full" />
+                <input type="number" step="0.25" value="{{ $payment->numero_ore }}" readonly class="input-field w-full" />
             </div>
         </div>
     </div>

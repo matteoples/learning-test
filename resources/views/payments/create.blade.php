@@ -40,7 +40,7 @@
             {{-- Numero  ore --}}
             <div class="flex flex-col gap-1 flex-1">
                 <label class="primary-text text-sm font-medium">Numero Ore <span class="text-red-500">*</span></label>
-                <input type="number" name="numero_ore" class="input-field" required>
+                <input type="number" step="0.25" name="numero_ore" class="input-field" required>
             </div>
         </div>
     </div>
