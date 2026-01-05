@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
-@section('page-title', 'Pagamento di ' . $payment->student->getNomeCompleto())
+@php
+    $studentName = $payment->student->getNomeCompleto();
+@endphp
+
+@section('page-title')
+Pagamento
+<span class="hidden md:inline"> di {{ $studentName }}</span>
+@endsection
 @section('back-button-route', route('students.show', $payment->student))
 
 @section('action-buttons')
@@ -12,9 +19,7 @@
 @endsection
 
 @section('content')
-
 <div class="flex flex-col gap-6">
-
     <!-- Prima riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {{-- Data --}}

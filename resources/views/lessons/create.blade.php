@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
-@section('page-title', 'Nuova Lezione di ' . $student->getNomeCompleto())
+@php
+    $studentName = $student->getNomeCompleto();
+@endphp
+
+@section('page-title')
+Nuova Lezione
+<span class="hidden md:inline"> per {{ $studentName }}</span>
+@endsection
 @section('back-button-route', route('students.show', $student))
 
 @section('action-buttons')

@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,14 +40,17 @@ Route::get('/auth/callback', function () {
 
 
 Route::middleware('auth')->group(callback: function(): void {
-    Route::get('/dashboard', function () {
+/*     Route::get('/dashboard', function () {
         //dd(Auth::user());
 
         $user = Auth::user();
         return view('dashboard', [
             'user' => $user
         ]);
-    })->name('dashboard');
+    })->name('dashboard'); */
+
+     Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
     Route::post('/logout', function () {
         Auth::logout();

@@ -45,7 +45,7 @@
         {{-- Tariffa Oraria --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Tariffa Oraria <span class="text-red-500">*</span> </label>
-            <input type="number" name="tariffa_oraria" class="input-field" value="{{ old('tariffa_oraria', $student->tariffa_oraria) }}">
+            <input type="number" step="0.01" name="tariffa_oraria" class="input-field" value="{{ old('tariffa_oraria', $student->tariffa_oraria) }}">
         </div>
 
         {{-- Telefono --}} 

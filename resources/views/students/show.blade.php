@@ -175,7 +175,7 @@
             <div class="flex justify-between items-center">
                 <h2 class="primary-text text-xl font-semibold">Lezioni</h2>
 
-                <a href="{{ route('students.edit', $student) }}" class="primary-button px-3 py-3">
+                <a href="{{ route('lessons.create', $student) }}" class="primary-button px-3 py-3">
                     <div class="items-center flex gap-3">
                         <img src="{{ asset('img/add.png') }}" alt="Modifica" class="w-5 h-5">
                         <p class="hidden sm:inline">Aggiungi </p> <!-- Nasconde il testo su sm e xs -->

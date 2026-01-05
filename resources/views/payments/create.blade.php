@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
-@section('page-title', 'Nuovo Pagamento per ' . $student->getNomeCompleto())
-@section('back-button-route', route('students.show', $student))
+@php
+    $studentName = $student->getNomeCompleto();
+@endphp
 
+@section('page-title')
+Nuovo Pagamento
+<span class="hidden md:inline"> per {{ $studentName }}</span>
+@endsection
+@section('back-button-route', route('students.show', $student))
 
 @section('action-buttons')
 <div class="flex gap-2">

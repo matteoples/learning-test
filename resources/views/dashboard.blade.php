@@ -1,5 +1,24 @@
 @extends('layouts.app')
 
+
+{{--/**************************************************************************************
+
+La dashboard ha due sezioni. La prima, "Prossimi Appuntamenti", deve mostrare i prossimi 5 
+appuntamenti che lo user ha. Di ogni lezione ci interessa il nome / cognome dello studente, 
+la durata, il luogo e le note. 
+
+Nella seconda sezione invece, sono salvati i debiti e i crediti.
+Nel box dei debiti, vengono mostrati tutti i debiti, ordinati in ordine decrescente con 
+"Nome Cognome: Importo". Cliccando su un debito, si viene rimandati alla pagina per aggiungere 
+un pagamento per il dato giorno specifico e nel campo data viene inserito il giorno attuale. 
+Nel box dei crediti, vengono mostrati i crediti > 0, ordinati in ordine decrescente con 
+"Nome Cognome: Importo". Cliccando su un credito, si viene rimandati alla pagina per inserire 
+una nuova lezione per il dato studente. 
+
+**************************************************************************************/--}}
+
+
+
 @section('page-title', 'Dashboard')
 
 @section('action-buttons')
@@ -56,7 +75,7 @@
 <main class="flex flex-col gap-6">
 
     <!-- Grid 3x1 -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {{-- <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="section p-4">
             <p class="primary-text font-bold text-lg">Titolo Card 1</p>
             <p class="secondary-text text-sm mt-1">Sottotitolo Card 1</p>
@@ -71,26 +90,76 @@
             <p class="primary-text font-bold text-lg">Titolo Card 3</p>
             <p class="secondary-text text-sm mt-1">Sottotitolo Card 3</p>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Due colonne 50% ciascuna -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[400px]">
-        <div class="section flex flex-col">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div class="section flex flex-col">
             <p class="primary-text font-bold text-lg">Prossimi Appuntamenti</p>
-            <p class="secondary-text text-sm mt-1">Testo secondario 1</p>
+            <div class="mt-2 flex flex-col gap-2">
+                @forelse($nextLessons as $lesson)
+                        <div class="card p-3 h-full">
+                            <div class="flex justify-between items-center mb-1">
+                                <p class="secondary-text text-xs">{{ $lesson->getTextGiornoFormatted() }}    -    {{ $lesson->getOraInizioFormatted() }} : {{ $lesson->getOraFineFormatted() }}</p>
+                                <p class="primary-text font-large"> {{ $lesson->durata() }} h</p>
+                            </div>
+                            <div class="pr-5 flex-1">
+                                <p class="primary-text text-lg font-medium">{{ $lesson->student->getNomeCompleto() }}</p>
+                                <p class="primary-text text-sm ">{{ $lesson->materia  ?? "N/A" }}
+                                    @isset($lesson->argomento) - {{ $lesson->argomento}} @endisset
+                                </p>
+                                
+                            </div>
+                        </div>
+
+                @empty
+                    <p class="text-sm text-gray-400 mt-2">Nessun prossimo appuntamento.</p>
+                @endforelse
+            </div>
         </div>
 
         <div class="flex flex-col gap-4">
+            {{-- Debiti --}}
             <div class="section flex flex-col">
                 <p class="primary-text font-bold text-lg">Debiti</p>
-                <p class="secondary-text text-sm mt-1">Testo secondario 2</p>
+                <div class="flex flex-col gap-2">
+                    @forelse($debts as $student)
+                        <a href="{{ route('payments.create', ['student' => $student->id]) }}">
+                            <div class="card p-3 h-full">
+                                <div class="flex justify-between items-center">
+                                    <p class="primary-text text-sm">{{ $student->getNomeCompleto() }}</p>
+                                    <p class="font-semibold text-red-600"> € {{ abs($student->saldo()) }} </p>
+                                </div>
+                            </div>
+                        </a>
+                    @empty
+                        <p class="text-sm text-gray-400 mt-2">Nessun debito.</p>
+                    @endforelse
+                </div>
             </div>
 
+            {{-- Crediti --}}
             <div class="section flex flex-col">
                 <p class="primary-text font-bold text-lg">Crediti</p>
-                <p class="secondary-text text-sm mt-1">Testo secondario 2</p>
+                <div class="flex flex-col gap-2">
+                    @forelse($credits as $student)
+                        <a href="{{ route('lessons.create', ['student' => $student->id]) }}">
+                            <div class="card p-3 h-full">
+                                <div class="flex justify-between items-center">
+                                    <p class="primary-text text-sm">{{ $student->getNomeCompleto() }}</p>
+                                    <p class="font-semibold text-green-600"> € {{ abs($student->saldo()) }} </p>
+                                </div>
+                            </div>
+                        </a>
+                    @empty
+                        <p class="text-sm text-gray-400 mt-2">Nessun credito.</p>
+                    @endforelse
+                </div>
             </div>  
+
         </div>
+
+
     </div>
 
 </main>

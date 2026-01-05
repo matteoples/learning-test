@@ -1,11 +1,17 @@
 @extends('layouts.app')
 
-@section('page-title', 'Modifica Pagamento per ' . $payment->student->getNomeCompleto())
+@php
+    $studentName = $payment->student->getNomeCompleto();
+@endphp
+
+@section('page-title')
+Modifica Pagamento
+<span class="hidden md:inline"> di {{ $studentName }}</span>
+@endsection
 @section('back-button-route', route('students.show', $payment->student))
 
 @section('action-buttons')
 <div class="flex gap-2">
-    {{-- Bottone Salva --}}
     <button type="submit" form="create-payment-form" class="primary-button px-4 py-2">
         <span class="md:hidden">Salva</span>
         <span class="hidden md:inline">Salva Modifiche</span>
