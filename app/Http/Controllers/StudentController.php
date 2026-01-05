@@ -34,6 +34,7 @@ class StudentController extends Controller
         $request->validate([
             'nome' => 'required|string|max:255',
             'cognome' => 'required|string|max:255',
+            'tariffa_oraria' => 'required|numeric|min:0.01|max:999'
         ]);
 
         Auth::user()->students()->create($request->all());
@@ -55,6 +56,7 @@ class StudentController extends Controller
  */        $request->validate([
             'nome' => 'required|string|max:255',
             'cognome' => 'required|string|max:255',
+            'tariffa_oraria' => 'required|numeric|min:0.01|max:999'
         ]);
 
         $student->update($request->all());
@@ -115,6 +117,7 @@ class StudentController extends Controller
                 ],
                 [
                     'telefono'  => $data['studente']['telefono'] ?? null,
+                    'tariffa_oraria'  => $data['studente']['tariffa_oraria'] ?? 0,
                     'classe'    => $data['studente']['classe'] ?? null,
                     'indirizzo' => $data['studente']['indirizzo'] ?? null,
                     'note'      => $data['studente']['note'] ?? null,

@@ -21,7 +21,10 @@
             <div class="flex justify-between items-center">
                 <h2 class="primary-text text-xl font-semibold">Anagrafica</h2>
                 <a href="{{ route('students.edit', $student) }}" class="primary-button px-3 py-3">
-                    <img src="{{ asset('img/edit.png') }}" alt="Modifica" class="w-5 h-5">
+                    <div class="items-center flex gap-3">
+                        <img src="{{ asset('img/edit.png') }}" alt="Modifica" class="w-5 h-5">
+                        <p class="hidden sm:inline lg:hidden 2xl:inline">Modifica</p> <!-- Nasconde il testo su sm e xs -->
+                    </div>
                 </a>
             </div>
 
@@ -89,11 +92,15 @@
                 <h2 class="primary-text text-xl font-semibold">Pagamenti</h2>
 
                 <a href="{{ route('payments.create', $student) }}" class="primary-button px-3 py-3">
-                    <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
+                    <div class="items-center flex gap-3">
+                        <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
+                        <p class="hidden sm:inline lg:hidden 2xl:inline">Aggiungi</p> <!-- Nasconde il testo su sm e xs -->
+                    </div>
+                    
                 </a>
             </div>
             
-            <div class="grid grid-cols-2 lg:grid-cols-1 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                 @forelse ($student->payments as $payment)
                     <a href="{{ route('payments.show', $payment) }}" class="block h-full">
                         <div class="card p-3 h-full">
@@ -168,11 +175,12 @@
             <div class="flex justify-between items-center">
                 <h2 class="primary-text text-xl font-semibold">Lezioni</h2>
 
-                <a href="{{ route('lessons.create', $student) }}"
-                class="primary-button px-4 py-2">
-                    <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-3 h-3">
-                    Nuova lezione
-                </a> 
+                <a href="{{ route('students.edit', $student) }}" class="primary-button px-3 py-3">
+                    <div class="items-center flex gap-3">
+                        <img src="{{ asset('img/add.png') }}" alt="Modifica" class="w-5 h-5">
+                        <p class="hidden sm:inline">Aggiungi </p> <!-- Nasconde il testo su sm e xs -->
+                    </div>
+                </a>
             </div>
 
 

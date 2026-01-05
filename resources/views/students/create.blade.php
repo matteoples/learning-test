@@ -38,10 +38,10 @@
 
     <!-- Seconda riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Data di nascita --}}
+        {{-- Tariffa Oraria --}}
         <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Data di nascita</label>
-            <input type="date" name="data_nascita" class="input-field">
+            <label class="primary-text text-sm font-medium">Tariffa Oraria <span class="text-red-500">*</span> </label>
+            <input type="number" name="tariffa_oraria" class="input-field">
         </div>
 
         {{-- Telefono --}}

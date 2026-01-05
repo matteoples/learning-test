@@ -6,7 +6,7 @@
     <title>RipetiFlow - @yield('title', 'Dashboard')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-odd flex p-3 sm:pb-[20px]">
+<body class="bg-odd flex p-3">
 
     <div class="fixed bottom-0 left-0 w-full h-[70px] xl:w-[180px]
         sm:top-0 sm:left-0 sm:w-[65px] sm:h-screen
@@ -155,8 +155,14 @@
             <div class="p-6 pt-2">
                 @yield('content')
             </div>
-        </div>
-    </main>
 
+            
+
+        </div>
+
+        <div class="h-[30px]"></div> <!-- spazio in basso -->
+    </main>
+    
+    
 </body>
 </html>

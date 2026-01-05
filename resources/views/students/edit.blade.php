@@ -8,7 +8,7 @@
 <div class="flex gap-2">
     {{-- Bottone Salva (primary) --}}
     <button type="submit" form="edit-student-form" class="primary-button px-4 py-2">
-        Salva Modifiche
+        Salva
     </button>
 </div>
 @endsection
@@ -42,13 +42,13 @@
 
     <!-- Seconda riga -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Data di nascita --}}
+        {{-- Tariffa Oraria --}}
         <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Data di nascita</label>
-            <input type="date" name="data_nascita" class="input-field" value="{{ old('data_nascita', $student->data_nascita) }}">
+            <label class="primary-text text-sm font-medium">Tariffa Oraria <span class="text-red-500">*</span> </label>
+            <input type="number" name="tariffa_oraria" class="input-field" value="{{ old('tariffa_oraria', $student->tariffa_oraria) }}">
         </div>
 
-        {{-- Telefono --}}
+        {{-- Telefono --}} 
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Telefono</label>
             <input type="text" name="telefono" class="input-field" value="{{ old('telefono', $student->telefono) }}">                
