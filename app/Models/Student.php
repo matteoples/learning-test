@@ -101,6 +101,7 @@ class Student extends Model
 
 
     public function saldoOrario() {
+        if ($this->tariffa_oraria == 0) { return 0; }
         $oreDecimali = abs($this->saldo()) / $this->tariffa_oraria;
 
         $oreIntere = floor($oreDecimali); // parte intera
