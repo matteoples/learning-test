@@ -17,7 +17,11 @@ Route::get('/auth/redirect', function () {
 })->name('auth.redirect');
 
 Route::get('/auth/callback', function () {
-    $googleUser = Socialite::driver('google')->user();
+    /*$googleUser = app()->isLocal()
+    ? Socialite::driver('google')->stateless()->user()
+    : Socialite::driver('google')->user(); */
+
+    $googleUser = Socialite::driver('google')->user(); 
 
     $user = User::updateOrCreate([
         'google_id' => $googleUser->id,
@@ -42,7 +46,7 @@ Route::middleware('auth')->group(callback: function(): void {
         return view('dashboard', [
             'user' => $user
         ]);
-    });
+    })->name('dashboard');
 
     Route::post('/logout', function () {
         Auth::logout();
