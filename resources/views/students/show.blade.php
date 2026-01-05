@@ -39,16 +39,16 @@
                     <p class="primary-text font-medium">{{ $student->cognome }}</p>
                 </div>
 
-                {{-- Data di nascita --}}
-                <div>
-                    <p class="secondary-text text-sm">Data di nascita</p>
-                    <p class="primary-text font-medium">{{ $student->getDataDiNascitaFormatted() ?? '-' }}</p>
-                </div>
-
                 {{-- Telefono --}}
                 <div>
                     <p class="secondary-text text-sm">Telefono</p>
                     <p class="primary-text font-medium">{{ $student->telefono ?? '-' }}</p>
+                </div>
+
+                {{-- Tariffa Oraria --}}
+                <div>
+                    <p class="secondary-text text-sm">Tariffa Oraria</p>
+                    <p class="primary-text font-medium">€ {{ $student->tariffa_oraria ?? '-' }}</p>
                 </div>
 
                 {{-- Email --}}
@@ -93,7 +93,7 @@
                 </a>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div class="grid grid-cols-2 lg:grid-cols-1 gap-3">
                 @forelse ($student->payments as $payment)
                     <a href="{{ route('payments.show', $payment) }}" class="block h-full">
                         <div class="card p-3 h-full">
@@ -133,38 +133,30 @@
                 <div class="flex justify-between">
                     <p class="primary-text font-medium">
                         Importo
-                        @if ($student->hasDebt())
-                            Debito
-                        @else
+                        @if ($student->saldo() > 0)
                             Credito
+                        @else
+                            Debito
                         @endif
                     </p>
 
                     <p class="primary-text">
-                        € N/A
-                        {{-- @if ($student->hasDebt())
-                            {{ $student->getDebitHours() * 1 }}
-                        @else
-                            {{ $student->getCreditHours() * 1 }} 
-                        @endif --}}
+                        € {{abs($student->saldo())}}
                     </p>
                 </div>
 
                 <div class="flex justify-between">
                     <p class="primary-text font-medium">
-                        @if ($student->hasDebt())
-                            Ore di Debito
+                        Ore di
+                        @if ($student->saldo() > 0)
+                            Credito
                         @else
-                            Ore di Credito
+                            Debito
                         @endif
                     </p>
 
                     <p class="primary-text">
-                        @if ($student->hasDebt())
-                            {{ $student->getDebitHours() }}h
-                        @else
-                            {{ $student->getCreditHours() }}h
-                        @endif
+                        {{ $student->saldoOrarioFormatted() }}
                     </p>
                 </div>
 

@@ -11,8 +11,8 @@ class Student extends Model
         'user_id',
         'nome',
         'cognome',
-        'data_nascita',
         'telefono',
+        'tariffa_oraria',
         'email',
         'indirizzo',
         'scuola',
@@ -20,9 +20,7 @@ class Student extends Model
         'note'
     ];
 
-    protected $casts = [
-        'data_nascita' => 'date',
-    ];
+    protected $casts =  [];
 
     // Relazione con tutor
     public function tutor() {
@@ -40,10 +38,6 @@ class Student extends Model
         return $this->hasMany(Payment::class);
     } 
 
-    public function getDataDiNascitaFormatted() {
-        return $this->data_nascita ? $this->data_nascita->format('d/m/Y') : null;
-    }
-
     public function getNomeCompleto() {
         if ($this->nome || $this->cognome) {
             return trim($this->nome . ' ' . $this->cognome);
@@ -51,8 +45,7 @@ class Student extends Model
         return null;
     }
 
-    public function getIniziali()
-    {
+    public function getIniziali(){
         $iniziali = '';
 
         if ($this->nome) {
@@ -96,23 +89,78 @@ class Student extends Model
         return "{$hours}h {$minutes}min";
     }
 
+    public function saldo() {
+        $totaleDebiti = $this->tariffa_oraria * $this->getTotalLessons();
+        $totaleDebiti = ceil($totaleDebiti);
+        $totaleCrediti = $this->getTotalPayments();
+
+        //il metodo ritorna il saldo, positivo se siamo in credito, negativo se siamo in debito
+        return $totaleCrediti - $totaleDebiti;
+
+    }
+
+
+    public function saldoOrario() {
+        $oreDecimali = abs($this->saldo()) / $this->tariffa_oraria;
+
+        $oreIntere = floor($oreDecimali); // parte intera
+        $frazione = $oreDecimali - $oreIntere; // parte decimale
+
+        // arrotondamento frazione a 0, 0.25, 0.5, 0.75, 1
+        if ($frazione < 0.125) {
+            $frazione = 0;       // meno di 7,5 min → arrotonda giù
+        } elseif ($frazione < 0.375) {
+            $frazione = 0.25;    // 7,5 - 22,5 min → 15 min
+        } elseif ($frazione < 0.625) {
+            $frazione = 0.5;     // 22,5 - 37,5 min → 30 min
+        } elseif ($frazione < 0.875) {
+            $frazione = 0.75;    // 37,5 - 52,5 min → 45 min
+        } else {
+            $frazione = 1;       // >52,5 min → arrotonda all’ora successiva
+        }
+
+        return $oreIntere + $frazione;
+    }
+
+
+    public function saldoOrarioFormatted() {
+        $saldo = $this->saldoOrario(); // ottieni ore decimali arrotondate
+
+        $ore = floor($saldo);                  // parte intera → ore
+        $minuti = ($saldo - $ore) * 60;       // parte decimale → minuti
+        $minuti = round($minuti);             // arrotonda al minuto più vicino
+
+        // Se i minuti sono zero, li ometti
+        if ($minuti == 0) {
+            return "{$ore}h";
+        }
+
+        return "{$ore}h {$minuti}min";
+    }
+
+
+
+
+
+
+    
     public function hasDebt()
     {
         return $this->getDebitHours() > 0;
     }
 
-    public function getCreditHours()
-    {
+    public function getCreditHours() {
+        
         $paidHours = $this->payments()->sum('numero_ore');
         $doneHours = $this->getTotalLessons();
 
         $credit = $paidHours - $doneHours;
 
         return $credit > 0 ? $credit : 0;
+        
     }
 
-    public function getDebitHours()
-    {
+    public function getDebitHours() {
         $paidHours = $this->payments()->sum('numero_ore');
         $doneHours = $this->getTotalLessons();
 
@@ -120,6 +168,7 @@ class Student extends Model
 
         return $debit > 0 ? $debit : 0;
     }
+        
 
 
 }
