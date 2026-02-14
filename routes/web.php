@@ -9,6 +9,7 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
@@ -60,7 +61,8 @@ Route::middleware('auth')->group(callback: function(): void {
         return redirect('/');
     })->name('logout');
 
-
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::put('/settings/subjects', [SettingsController::class, 'updateSubjects'])->name('settings.update-subjects');
 
 
     
@@ -96,6 +98,7 @@ Route::middleware('auth')->group(callback: function(): void {
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
    
 });
+
 
 Route::get('/', function () {
     return view('welcome');
