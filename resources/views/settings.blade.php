@@ -47,52 +47,6 @@
         });
     }
 </script>
-@endsection
-
-
-@section('content')
-<main class="flex flex-col gap-6">
-
-    <div class="section p-6 flex flex-col gap-4 h-full">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="primary-text text-xl font-semibold">Materie che insegni</h2>
-
-            <div class="flex gap-2">
-                <button id="edit-btn" type="button" class="primary-button px-4 py-2">Modifica</button>
-                
-                <button id="save-btn" type="submit" form="subjects-form"
-                    class="primary-button px-4 py-2 hidden">Salva</button>
-
-                <button id="cancel-btn" type="button" class="secondary-button px-4 py-2 hidden">Annulla</button>
-            </div>
-        </div>
-
-
-        <form id="subjects-form" action="{{ route('settings.update-subjects') }}" method="POST" class="flex flex-col gap-4">
-            @csrf
-            @method('PUT')
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                @foreach($allSubjects as $subject)
-                    <div class="card p-3 h-full flex flex-col justify-between">
-                        
-                        <label class="inline-flex items-center gap-2 p-2 hover:bg-odd cursor-pointer">
-                            <input type="checkbox" name="subjects[]" value="{{ $subject->id }}"
-                                class="form-checkbox subject-checkbox"
-                                {{ in_array($subject->id, $userSubjects) ? 'checked' : '' }}
-                                disabled>
-                            <div class="pr-5 flex-1">
-                                <p class="primary-text font-medium">{{ $subject->nome }}</p>
-                            </div>
-                        </label>
-                    </div>
-                @endforeach
-            </div>
-        </form>
-
-
-    </div>
-</main>
 
 
 <script>
@@ -104,7 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Modalità Read
     function setReadMode() {
-        checkboxes.forEach(cb => cb.disabled = true);
+        checkboxes.forEach(cb => {
+            cb.disabled = true;
+            cb.closest('.card').classList.remove('editable'); // rimuove il cursore pointer
+        });
         editBtn.classList.remove('hidden');
         saveBtn.classList.add('hidden');
         cancelBtn.classList.add('hidden');
@@ -112,7 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Modalità Edit
     function setEditMode() {
-        checkboxes.forEach(cb => cb.disabled = false);
+        checkboxes.forEach(cb => {
+            cb.disabled = false;
+            cb.closest('.card').classList.add('editable'); // aggiunge il cursore pointer
+        });
         editBtn.classList.add('hidden');
         saveBtn.classList.remove('hidden');
         cancelBtn.classList.remove('hidden');
@@ -131,7 +91,90 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setReadMode();
     });
+
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.subject-checkbox');
+
+    checkboxes.forEach(cb => {
+        const card = cb.closest('.card');
+        const checkmark = cb.closest('label').querySelector('.checkmark');
+
+        function updateCheckmark() {
+            if (cb.checked) {
+                card.classList.add('card-selected');  // mantiene il colore di background
+                checkmark.style.display = 'block';    // mostra checkmark
+            } else {
+                card.classList.remove('card-selected');
+                checkmark.style.display = 'none';    // mostra checkmark
+            }
+        }
+
+        updateCheckmark(); // stato iniziale
+        cb.addEventListener('change', updateCheckmark); // aggiorna al click
+    });
+});
+
+
 </script>
+
+@endsection
+
+
+@section('content')
+<main class="flex flex-col gap-6">
+
+    <div class="section p-6 flex flex-col gap-4 h-full">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="primary-text text-xl font-semibold">Materie che insegni</h2>
+
+            <div class="flex gap-2">
+                <button id="edit-btn" type="button" class="primary-button px-4 py-2">Modifica</button>
+                
+                <button id="cancel-btn" type="button" class="secondary-button px-4 py-2 hidden">Annulla</button>
+
+                <button id="save-btn" type="submit" form="subjects-form"
+                    class="primary-button px-4 py-2 hidden">Salva</button>
+
+            </div>
+        </div>
+
+
+        <form id="subjects-form" action="{{ route('settings.update-subjects') }}" method="POST" class="flex flex-col gap-4">
+            @csrf
+            @method('PUT')
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                @foreach($allSubjects as $subject)
+                    <div class="card p-3 h-full flex flex-col justify-between">
+                        <label class="inline-flex items-center gap-2 p-2 hover:bg-odd cursor-pointer">
+                            <input type="checkbox"
+                                name="subjects[]"
+                                value="{{ $subject->id }}"
+                                class="form-checkbox subject-checkbox hidden"
+                                {{ in_array($subject->id, $userSubjects) ? 'checked' : '' }}
+                                disabled>
+                            <div class="pr-5 flex-1">
+                                <p class="primary-text font-medium">{{ $subject->nome }}</p>
+                            </div>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" 
+                            stroke="var(--accent-color)" class="size-6 checkmark" 
+                            style="display: {{ in_array($subject->id, $userSubjects) ? 'block' : 'none' }};">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                            </svg>
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+
+        </form>
+
+
+    </div>
+</main>
+
+
 
 @endsection

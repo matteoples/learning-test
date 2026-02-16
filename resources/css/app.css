@@ -61,13 +61,20 @@
     .secondary-text {
         color: var(--secondary-text);
     }
+    .bg-accent {
+        background-color: color-mix(in srgb, var(--accent-color) 20%, transparent) !important;
+    }
+    .bg-accent-hover {
+        background-color: color-mix(in srgb, var(--accent-color-hover) 30%, transparent) !important;
+    }
+
 }
 
 
 
 
 .secondary-button {
-    @apply px-3 py-2 rounded-lg flex items-center gap-2 transition;
+    @apply px-3 py-2 rounded-lg items-center gap-2 transition;
     color: var(--primary-text);
     border: 2px solid var(--box-border);
     background-color: transparent;
@@ -78,7 +85,7 @@
 
 
 .primary-button {
-    @apply rounded-lg flex items-center gap-2 transition justify-center;
+    @apply rounded-lg items-center gap-2 transition justify-center;
     color: #ffffff;
     border: 2px solid var(--accent-color);
     background-color: var(--accent-color);
@@ -93,7 +100,7 @@
 }
 
 .destructive-button {
-    @apply rounded-lg flex items-center gap-2 transition justify-center;
+    @apply rounded-lg items-center gap-2 transition justify-center;
     color: #ffffff;
     border: 2px solid #C9372C;
     background-color: #C9372C;
@@ -105,18 +112,36 @@
 
 .section {
     @apply p-6 rounded-lg border flex flex-col gap-4 transition;
-    border-color: var(--box-border );
+    border-color: var(--box-border);
 }
+
 
 .card {
     @apply rounded-lg transition-colors duration-200 border box-border w-full;
     background-color: var(--bg-even);
-    border-color: var(--box-border );
+    border-color: var(--box-border);
+    /* aggiungi hover di default */
 }
 
-.card:hover {
+.card:not(.card-selected):hover {
     background-color: var(--bg-odd);
 }
+
+
+.card-selected {
+    @apply rounded-lg transition-colors duration-200 border box-border w-full;
+    background-color: color-mix(in srgb, var(--accent-color) 20%, transparent);
+    border-color: var(--accent-color);
+}
+
+.card-selected:hover {
+    background-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
+}
+
+.card.editable {
+    cursor: pointer;
+}
+
 
 .input-field {
     @apply border box-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-100 focus:outline-none w-full;
