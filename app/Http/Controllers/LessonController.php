@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lesson;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class LessonController extends Controller
@@ -16,7 +17,8 @@ class LessonController extends Controller
 
     public function create(Student $student)
     {
-        return view('lessons.create', compact('student'));
+        $userSubjects = auth()->user()->subjects;
+        return view('lessons.create', compact('student', 'userSubjects'));
     }
 
     public function store(Request $request, Student $student)
@@ -30,12 +32,12 @@ class LessonController extends Controller
         $lesson = new Lesson();
         $lesson->student_id = $student->id;
         $lesson->user_id = auth()->id();
+        $lesson->subject_id = $request->subject_id ?? null;
         $lesson->giorno = $request->giorno;
         $lesson->ora_inizio = $request->ora_inizio;
         $lesson->ora_fine = $request->ora_fine;
         $lesson->luogo = $request->luogo;
         $lesson->argomento = $request->argomento;
-        $lesson->materia = $request->materia ?? null; 
 
         $lesson->save(); 
 
@@ -47,6 +49,7 @@ class LessonController extends Controller
     public function show(Lesson $lesson)
     {
         //$this->authorize('view', $lesson);
+        $lesson->load('subject');
         return view('lessons.show', compact('lesson'));
     }
 
@@ -70,8 +73,8 @@ class LessonController extends Controller
 
     public function edit(Lesson $lesson)
     {
-        //$this->authorize('update', $lesson);
-        return view('lessons.edit', compact('lesson'));
+        $userSubjects = auth()->user()->subjects;
+        return view('lessons.edit', compact('lesson', 'userSubjects'));
     }
 
     public function update(Request $request, Lesson $lesson)

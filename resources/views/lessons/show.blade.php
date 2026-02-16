@@ -56,7 +56,7 @@ Dettagli Lezione
         {{-- Materia --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Materia</label>
-            <input type="text" value="{{ $lesson->materia ?? 'N/A' }}" readonly class="input-field" />
+            <input type="text" value="{{ $lesson->subject->nome ?? 'N/A' }}"  readonly class="input-field"/>
         </div>
     </div>
 

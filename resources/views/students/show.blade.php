@@ -17,6 +17,9 @@
 
 <div class="flex flex-col lg:flex-row gap-4">
     <div class="flex flex-col gap-4 w-full lg:w-[40%]">
+        
+        
+        {{-- SEZIONE ANAGRAFICA --}}
         <div class="section">
             <div class="flex justify-between items-center">
                 <h2 class="primary-text text-xl font-semibold">Anagrafica</h2>
@@ -28,7 +31,6 @@
                 </a>
             </div>
 
-            
             <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 gap-4 mt-4">
                 {{-- Nome --}}
                 <div>
@@ -87,6 +89,7 @@
             </div>
         </div>
 
+        {{-- SEZIONE PAGAMENTI --}}
         <div class="section">
             <div class="flex justify-between items-center">
                 <h2 class="primary-text text-xl font-semibold">Pagamenti</h2>
@@ -117,12 +120,13 @@
                     </p>
                 @endforelse
             </div>
-
-
         </div>
+
+
     </div>
 
     <div class="flex flex-col w-full gap-4">
+        {{-- SEZIONE STATISTICHE --}}
         <div class="flex flex-col md:flex-row gap-4">
 
             <div class="section w-full">
@@ -171,6 +175,7 @@
             </div>
         </div>
 
+        {{-- SEZIONE LEZIONI --}}
         <div class="section p-6 flex flex-col gap-4 h-full">
             <div class="flex justify-between items-center">
                 <h2 class="primary-text text-xl font-semibold">Lezioni</h2>
@@ -193,7 +198,7 @@
                                 <p class="primary-text font-large"> {{ $lesson->durata() }} h</p>
                             </div>
                             <div class="pr-5 flex-1">
-                                <p class="primary-text font-medium">{{ $lesson->materia  ?? "N/A" }}</p>
+                                <p class="primary-text font-medium">{{ $lesson->subject->nome  ?? "N/A" }}</p>
                                 @isset($lesson->argomento)
                                     <p class="secondary-text text-xs">{{ $lesson->argomento}}</p>
                                 @endisset

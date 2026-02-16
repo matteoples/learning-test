@@ -18,6 +18,7 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
+        $student->load('lessons.subject');
         // Restituisce la vista con il singolo studente
         return view('students.show', compact('student'));
     }

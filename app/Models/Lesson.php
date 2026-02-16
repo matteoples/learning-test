@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Lesson extends Model
 {
     protected $fillable = [
-        'student_id', 'giorno', 'ora_inizio', 'ora_fine', 'luogo', 'argomento', 'materia', 'user_id'
+        'student_id', 'giorno', 'ora_inizio', 'ora_fine', 'luogo', 'argomento', 'subject_id', 'user_id'
     ];
 
     public function student()
@@ -19,6 +19,11 @@ class Lesson extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class, 'subject_id');
     }
 
     public function durata()

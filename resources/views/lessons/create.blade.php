@@ -2,6 +2,7 @@
 
 @php
     $studentName = $student->getNomeCompleto();
+    $luoghi = ['Online', 'Casa Tutor', 'Casa Cliente', 'Biblioteca', 'Altro'];
 @endphp
 
 @section('page-title')
@@ -58,20 +59,34 @@ Nuova Lezione
         {{-- Luogo --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Luogo</label>
-            <input type="text" name="luogo" class="input-field">
+            
+            <select name="luogo" class="input-field">
+                <option value="">---</option>
+
+                @php
+                    $luoghi = ['Online', 'Casa Tutor', 'Casa Cliente', 'Biblioteca', 'Altro'];
+                @endphp
+
+                @foreach($luoghi as $luogo)
+                    <option value="{{ $luogo }}" {{ old('luogo') === $luogo ? 'selected' : '' }}>
+                        {{ $luogo }}
+                    </option>
+                @endforeach
+            </select>
+
         </div>
 
         {{-- Materia --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Materia</label>
-            <select name="materia" class="input-field">
-                <option value="">Seleziona una materia</option>
-                <option value="Matematica">Matematica</option>
-                <option value="Telecomunicazioni">Telecomunicazioni</option>
-                <option value="Informatica">Informatica</option>
-                <option value="Chimica">Chimica</option>
-                <option value="Inglese">Inglese</option>
-                {{-- aggiungi altre materie qui --}}
+            <select name="subject_id" class="input-field" required>
+                <option value="">---</option>
+
+                @foreach($userSubjects as $subject)
+                    <option value="{{ $subject->id }}">
+                        {{ $subject->nome }}
+                    </option>
+                @endforeach
             </select>
         </div>
     </div>

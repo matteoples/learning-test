@@ -2,6 +2,7 @@
 
 @php
     $studentName = $lesson->student->getNomeCompleto();
+    $luoghi = ['Online', 'Casa Tutor', 'Casa Cliente', 'Biblioteca', 'Altro'];
 @endphp
 
 @section('page-title')
@@ -58,19 +59,31 @@ Modifica Lezione
         {{-- Luogo --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Luogo</label>
-            <input type="text" name="luogo" value="{{ $lesson->luogo ?? '' }}" class="input-field" />
+            
+            <select name="luogo" class="input-field">
+                <option value="">---</option>
+                @foreach($luoghi as $luogo)
+                    <option value="{{ $luogo }}" @selected(old('luogo', $lesson->luogo) === $luogo)>
+                        {{ $luogo }}
+                    </option>
+                @endforeach
+            </select>
+
         </div>
+
+
 
         {{-- Materia --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Materia</label>
-            <select name="materia" class="input-field">
-                <option value="">Seleziona una materia</option>
-                <option value="Matematica" @selected($lesson->materia === 'Matematica')>Matematica</option>
-                <option value="Telecomunicazioni" @selected($lesson->materia === 'Telecomunicazioni')>Telecomunicazioni</option>
-                <option value="Informatica" @selected($lesson->materia === 'Informatica')>Informatica</option>
-                <option value="Chimica" @selected($lesson->materia === 'Chimica')>Chimica</option>
-                <option value="Inglese" @selected($lesson->materia === 'Inglese')>Inglese</option>
+            <select name="subject_id" class="input-field">
+                <option value="">---</option>
+
+                @foreach($userSubjects as $subject)
+                    <option value="{{ $subject->id }}" @selected($lesson->subject_id === $subject->id)>
+                        {{ $subject->nome }}
+                    </option>
+                @endforeach
             </select>
         </div>
     </div>
