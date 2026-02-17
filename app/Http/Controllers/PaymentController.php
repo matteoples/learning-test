@@ -42,7 +42,6 @@ class PaymentController extends Controller
             'data' => 'required|date',
             'modalita' => 'required|string|max:255',
             'importo' => 'required|numeric|min:0',
-            'numero_ore' => 'required|numeric|min:0',
             'note' => 'nullable|string',
         ]);
 
@@ -53,7 +52,6 @@ class PaymentController extends Controller
         $payment->data = $request->data;
         $payment->modalita = $request->modalita;
         $payment->importo = $request->importo;
-        $payment->numero_ore = $request->numero_ore;
         $payment->note = $request->note ?? null;
 
         $payment->save();
@@ -77,7 +75,6 @@ class PaymentController extends Controller
             'data' => 'required|date',
             'modalita' => 'required|string|max:255',
             'importo' => 'required|numeric|min:0',
-            'numero_ore' => 'required|numeric|min:0',
             'note' => 'nullable|string',
         ]);
 

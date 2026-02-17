@@ -13,7 +13,6 @@ class Payment extends Model
         'data',
         'modalita',
         'importo',
-        'numero_ore',
         'note'
     ];
 
