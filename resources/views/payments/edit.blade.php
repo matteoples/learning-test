@@ -2,6 +2,7 @@
 
 @php
     $studentName = $payment->student->getNomeCompleto();
+    $modalitaOptions = ['Contanti','Bonifico','PayPal','Satispay','Revolut'];
 @endphp
 
 @section('page-title')
@@ -28,17 +29,35 @@ Modifica Pagamento
     @csrf
     @method('PUT')
 
-    <!-- Prima riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Data --}}
-        <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">
-                Data <span class="text-red-500">*</span>
-            </label>
-            <input type="date" name="data" required value="{{ $payment->data }}" class="input-field">
-        </div>
 
-        <div class="flex flex-row gap-4">
+    <div class="flex flex-col md:flex-row gap-8">
+
+        <!-- BLOCCO 1 -->
+        <div class="w-full md:w-[400px] flex flex-col gap-4">
+            {{-- Data --}}
+            <div class="flex flex-col gap-1">
+                <label class="primary-text text-sm font-medium">
+                    Data <span class="text-red-500">*</span>
+                </label>
+                <input type="date" name="data" required value="{{ $payment->data }}" class="input-field">
+            </div>
+        
+            {{-- Modalità --}}
+            <div class="flex flex-col gap-1">
+                <label class="primary-text text-sm font-medium">
+                    Modalità <span class="text-red-500">*</span>
+                </label>
+                <select name="modalita" required class="input-field">
+                    <option value="">Seleziona una modalità</option>
+                    @foreach ($modalitaOptions as $mode)
+                        <option value="{{ $mode }}" {{ $payment->modalita === $mode ? 'selected' : '' }}>
+                            {{ $mode }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        
+
             {{-- Importo --}}
             <div class="flex flex-col gap-1 flex-1">
                 <label class="primary-text text-sm font-medium">
@@ -46,39 +65,16 @@ Modifica Pagamento
                 </label>
                 <input type="number" name="importo" required value="{{ $payment->importo }}" class="input-field w-full">
             </div>
-
-            {{-- Numero ore --}}
-            <div class="flex flex-col gap-1 flex-1">
-                <label class="primary-text text-sm font-medium">
-                    Numero Ore <span class="text-red-500">*</span>
-                </label>
-                <input type="number" step="0.25" name="numero_ore" required value="{{ $payment->numero_ore }}" class="input-field w-full">
-            </div>
+        
         </div>
-    </div>
 
-    <!-- Seconda riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Modalità --}}
-        <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">
-                Modalità <span class="text-red-500">*</span>
-            </label>
-            <select name="modalita" required class="input-field">
-                <option value="">Seleziona una modalità</option>
-                @foreach (['Contanti','Bonifico','PayPal','Satispay','Revolut'] as $mode)
-                    <option value="{{ $mode }}" {{ $payment->modalita === $mode ? 'selected' : '' }}>
-                        {{ $mode }}
-                    </option>
-                @endforeach
-            </select>
+        <!-- BLOCCO 2 -->
+        {{-- Note --}}        
+        <div class="w-full flex flex-col gap-1">
+            <label class="primary-text text-sm font-medium">Note</label>
+            <textarea name="note" rows="5" class="input-field w-full h-full">{{ $payment->note }}</textarea>
         </div>
-    </div>
 
-    <!-- Terza riga -->
-    <div class="flex flex-col gap-1">
-        <label class="primary-text text-sm font-medium">Note</label>
-        <textarea name="note" rows="4" class="input-field">{{ $payment->note }}</textarea>
     </div>
 
 </form>

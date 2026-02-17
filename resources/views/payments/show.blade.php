@@ -19,45 +19,47 @@ Pagamento
 @endsection
 
 @section('content')
-<div class="flex flex-col gap-6">
-    <!-- Prima riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+<div class="flex flex-col md:flex-row gap-8">
+
+    <!-- BLOCCO 1 -->
+    <div class="w-full md:w-[400px] flex flex-col gap-4">
         {{-- Data --}}
         <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Data</label>
+            <label class="primary-text text-sm font-medium">
+                Data <span class="text-red-500">*</span>
+            </label>
             <input type="date" value="{{ $payment->data }}" readonly class="input-field" />
         </div>
 
-        <div class="flex flex-row gap-4">
-            {{-- Importo --}}
-            <div class="flex flex-col gap-1 flex-1">
-                <label class="primary-text text-sm font-medium">Importo</label>
-                <input type="number" value="{{ $payment->importo }}" readonly class="input-field w-full" />
-            </div>
-
-            {{-- Numero ore --}}
-            <div class="flex flex-col gap-1 flex-1">
-                <label class="primary-text text-sm font-medium">Numero Ore</label>
-                <input type="number" step="0.25" value="{{ $payment->numero_ore }}" readonly class="input-field w-full" />
-            </div>
-        </div>
-    </div>
-
-    <!-- Seconda riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {{-- Modalità --}}
         <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Modalità</label>
+            <label class="primary-text text-sm font-medium">
+                Modalità <span class="text-red-500">*</span>
+            </label>
             <input type="text" value="{{ $payment->modalita }}" readonly class="input-field" />
+        </div>
+
+        {{-- Importo --}}
+        <div class="flex flex-col gap-1 flex-1">
+            <label class="primary-text text-sm font-medium">
+                Importo <span class="text-red-500">*</span>
+            </label>
+            <input type="number" value="{{ $payment->importo }}" readonly class="input-field" />
         </div>
     </div>
 
-    <!-- Note -->
-    <div class="flex flex-col gap-1">
+    <!-- BLOCCO 2 -->
+    {{-- Note --}}
+    <div class="w-full flex flex-col gap-1">
         <label class="primary-text text-sm font-medium">Note</label>
-        <textarea rows="4" readonly class="input-field w-full">{{ $payment->note }}</textarea>
+        <textarea rows="5" readonly class="input-field w-full h-full">
+            {{ $payment->note }}
+        </textarea>
     </div>
 
 </div>
+
+
 
 @endsection

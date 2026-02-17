@@ -8,11 +8,11 @@
 </head>
 <body class="bg-odd flex p-3">
 
-    <div class="fixed bottom-0 left-0 w-full h-[70px] xl:w-[180px]
-        sm:top-0 sm:left-0 sm:w-[65px] sm:h-screen
+    <div class="fixed bottom-0 left-0 w-full h-[60px] xl:w-[180px]
+        sm:top-0 sm:left-0 sm:w-[100px] sm:h-screen
         bg-odd
         flex sm:flex-col 
-        items-center justify-around sm:justify-start 
+        items-center justify-start
         gap-5 sm:gap-2
         z-50">
 
