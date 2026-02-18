@@ -12,11 +12,30 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 use Laravel\Socialite\Facades\Socialite;
+use App\Services\GoogleAccountService;
+
  
-Route::get('/auth/redirect', function () {
+/* Route::get('/auth/redirect', function () {
     return Socialite::driver('google')->redirect();
+})->name('auth.redirect'); */
+
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('google')
+        ->scopes([
+            'openid',
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/calendar' // aggiungi qui Calendar
+        ])
+        ->with([
+            'access_type' => 'offline', // serve per refresh token
+            'prompt' => 'consent',       // forza richiesta dei permessi
+        ])
+        ->redirect();
 })->name('auth.redirect');
+
 
 Route::get('/auth/callback', function () {
     /*$googleUser = app()->isLocal()
@@ -30,9 +49,10 @@ Route::get('/auth/callback', function () {
     ], [
         'name' => $googleUser->name,
         'email' => $googleUser->email,
-        'google_token' => $googleUser->token,
-        'google_refresh_token' => $googleUser->refreshToken ?? null,
     ]);
+
+    $googleService = new GoogleAccountService($user);
+    $user = $googleService->handleOAuthCallback($googleUser);
 
     Auth::login($user);
 
@@ -41,15 +61,6 @@ Route::get('/auth/callback', function () {
 
 
 Route::middleware('auth')->group(callback: function(): void {
-/*     Route::get('/dashboard', function () {
-        //dd(Auth::user());
-
-        $user = Auth::user();
-        return view('dashboard', [
-            'user' => $user
-        ]);
-    })->name('dashboard'); */
-
      Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
