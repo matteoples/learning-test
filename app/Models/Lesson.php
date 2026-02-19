@@ -8,7 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Lesson extends Model
 {
     protected $fillable = [
-        'student_id', 'giorno', 'ora_inizio', 'ora_fine', 'luogo', 'argomento', 'subject_id', 'user_id'
+        'student_id', 
+        'giorno', 
+        'ora_inizio', 
+        'ora_fine', 
+        'luogo', 
+        'argomento', 
+        'subject_id', 
+        'user_id',
+        'google_event_id',
     ];
 
     public function student()

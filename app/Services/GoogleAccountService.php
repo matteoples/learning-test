@@ -2,105 +2,210 @@
 
 namespace App\Services;
 
-use App\Models\User;
+use Google\Client as GoogleClient;
+use Google\Service\Calendar as GoogleCalendar;
 use Carbon\Carbon;
-use Google_Client;
-use Google_Service_Calendar;
-use Google_Service_Calendar_Calendar;
+use App\Models\User;
 
 class GoogleAccountService
 {
+    protected GoogleClient $client;
+    protected GoogleCalendar $calendarService;
     protected User $user;
-    protected Google_Client $client;
-    protected Google_Service_Calendar $calendarService;
 
     public function __construct(User $user)
     {
         $this->user = $user;
 
-        // Inizializza Google Client
-        $this->client = new Google_Client();
+        $this->client = new GoogleClient();
         $this->client->setClientId(config('services.google.client_id'));
         $this->client->setClientSecret(config('services.google.client_secret'));
-        $this->client->setAccessToken([
-            'access_token' => $user->google_token,
-            'refresh_token' => $user->google_refresh_token,
-            'expires_in' => $user->google_token_expires_at
-                ? now()->diffInSeconds($user->google_token_expires_at, false)
-                : 3600
+        $this->client->setRedirectUri(config('services.google.redirect'));
+        $this->client->setAccessType('offline');
+        $this->client->setScopes([
+            GoogleCalendar::CALENDAR
         ]);
 
-        $this->refreshTokenIfNeeded();
+        $this->setAccessToken();
 
-        $this->calendarService = new Google_Service_Calendar($this->client);
+        $this->calendarService = new GoogleCalendar($this->client);
     }
 
-    /**
-     * Gestione automatico refresh token
-     */
-    protected function refreshTokenIfNeeded(): void
+    protected function setAccessToken(): void
     {
-        if ($this->client->isAccessTokenExpired() && $this->user->google_refresh_token) {
+        if (!$this->user->google_token) {
+            //dd($this->user);
+            throw new \Exception('Google access token missing.');
+        }
+
+        $this->client->setAccessToken([
+            'access_token' => $this->user->google_token,
+            'refresh_token' => $this->user->google_refresh_token,
+        ]);
+
+        // Refresh automatico se scaduto
+        if ($this->client->isAccessTokenExpired()) {
+
+            if (!$this->user->google_refresh_token) {
+                throw new \Exception('Google refresh token missing.');
+            }
+
             $newToken = $this->client->fetchAccessTokenWithRefreshToken(
                 $this->user->google_refresh_token
             );
 
-            $this->user->update([
-                'google_token' => $newToken['access_token'],
-                'google_token_expires_at' => now()->addSeconds($newToken['expires_in']),
+            if (isset($newToken['error'])) {
+                throw new \Exception('Unable to refresh Google token.');
+            }
+
+            $this->user->google_token = $newToken['access_token'];
+            $this->user->save();
+
+            $this->client->setAccessToken([
+                'access_token' => $newToken['access_token'],
+                'refresh_token' => $this->user->google_refresh_token,
             ]);
-
-            $this->client->setAccessToken($newToken);
         }
     }
 
-    /**
-     * Callback OAuth - salva i token e crea il calendario se necessario
-     */
-    public function handleOAuthCallback($googleUser): User
+    public function createCalendar(string $name): string
     {
-        $this->user->update([
-            'google_token' => $googleUser->token,
-            'google_refresh_token' => $googleUser->refreshToken ?? $this->user->google_refresh_token,
-            'google_token_expires_at' => now()->addSeconds($googleUser->expiresIn ?? 3600),
-            'name' => $googleUser->name,
-            'email' => $googleUser->email,
+        $calendar = new \Google\Service\Calendar\Calendar([
+            'summary' => $name,
+            'timeZone' => config('app.timezone'),
         ]);
 
-        // Creazione immediata calendario Ripetiflow
-        $this->createCalendarIfMissing();
+        $createdCalendar = $this->calendarService->calendars->insert($calendar);
 
-        return $this->user;
+        $this->createEvent(
+            $createdCalendar->id,
+            'Evento di prova',
+            now()->format('Y-m-d'),
+            now()->format('H:i:s'),
+            now()->addHour()->format('H:i:s'),
+            'Descrizione evento'
+        );
+
+        return $createdCalendar->id;
     }
 
-    /**
-     * Creazione calendario Ripetiflow se non esiste
-     */
-    public function createCalendarIfMissing(): string
-    {
-        if ($this->user->google_calendar_id) {
-            return $this->user->google_calendar_id;
+    public function createEvent(
+        string $calendarId,
+        string $summary,
+        ?string $giorno = null,
+        ?string $oraInizio = null,
+        ?string $oraFine = null,
+        ?string $description = null,
+    ) {
+        
+        try {
+            if ($giorno && $oraInizio && $oraFine) {
+                $start = Carbon::parse($giorno . ' ' . $oraInizio);
+                $end   = Carbon::parse($giorno . ' ' . $oraFine);
+            } else {
+                // fallback: giorno = 1 gennaio 2026, ora 00:00 → +5 minuti
+                $start = Carbon::parse('2026-01-01 00:00:00');
+                $end   = (clone $start)->addMinutes(5);
+            }
+        } catch (\Exception $e) {
+            // fallback se il parsing fallisce
+            $start = Carbon::parse('2026-01-01 00:00:00');
+            $end   = (clone $start)->addMinutes(5);
         }
 
-        $calendar = new Google_Service_Calendar_Calendar([
-            'summary' => 'Ripetiflow',
-            'timeZone' => 'Europe/Rome',
+
+        $event = new \Google\Service\Calendar\Event([
+            'summary' => $summary,
+            'description' => $description,
+            'start' => [
+                'dateTime' => $start->toIso8601String(),
+                'timeZone' => config('app.timezone'),
+            ],
+            'end' => [
+                'dateTime' => $end->toIso8601String(),
+                'timeZone' => config('app.timezone'),
+            ],
         ]);
 
-        $created = $this->calendarService->calendars->insert($calendar);
-
-        $this->user->update([
-            'google_calendar_id' => $created->getId(),
-        ]);
-
-        return $created->getId();
+        return $this->calendarService->events->insert($calendarId, $event);
     }
 
-    /**
-     * Restituisce l'ID del calendario
-     */
-    public function getCalendarId(): string
+
+    public function updateEvent(
+        string $calendarId,
+        string $eventId,
+        string $summary,
+        ?string $giorno = null,
+        ?string $oraInizio = null,
+        ?string $oraFine = null,
+        ?string $description = null
+    ) {
+        // Recupera l'evento esistente
+        $event = $this->calendarService->events->get($calendarId, $eventId);
+
+        // Combina giorno e ora in Carbon per i nuovi valori
+        try {
+            if ($giorno && $oraInizio && $oraFine) {
+                $newStart = Carbon::parse($giorno . ' ' . $oraInizio);
+                $newEnd   = Carbon::parse($giorno . ' ' . $oraFine);
+            } else {
+                $newStart = Carbon::parse('2026-01-01 00:00:00');
+                $newEnd   = (clone $newStart)->addMinutes(5);
+            }
+        } catch (\Exception $e) {
+            $newStart = Carbon::parse('2026-01-01 00:00:00');
+            $newEnd   = (clone $newStart)->addMinutes(5);
+        }
+
+        $updateNeeded = false;
+
+        // Controlla se il summary o description sono diversi
+        if ($event->getSummary() !== $summary) {
+            $event->setSummary($summary);
+            $updateNeeded = true;
+        }
+
+        if ($event->getDescription() !== $description) {
+            $event->setDescription($description);
+            $updateNeeded = true;
+        }
+
+        // Controlla se start/end sono diversi
+        $currentStart = Carbon::parse($event->start->dateTime)->toIso8601String();
+        $currentEnd   = Carbon::parse($event->end->dateTime)->toIso8601String();
+
+        if ($currentStart !== $newStart->toIso8601String()) {
+            $event->setStart([
+                'dateTime' => $newStart->toIso8601String(),
+                'timeZone' => config('app.timezone'),
+            ]);
+            $updateNeeded = true;
+        }
+
+        if ($currentEnd !== $newEnd->toIso8601String()) {
+            $event->setEnd([
+                'dateTime' => $newEnd->toIso8601String(),
+                'timeZone' => config('app.timezone'),
+            ]);
+            $updateNeeded = true;
+        }
+
+        // Se non ci sono modifiche, non fare update
+        if (!$updateNeeded) {
+            return null; // oppure false per indicare "nessuna modifica"
+        }
+
+        // Salva le modifiche su Google Calendar
+        return $this->calendarService->events->update($calendarId, $eventId, $event);
+    }
+
+
+
+    public function deleteEvent(string $calendarId, string $eventId)
     {
-        return $this->user->google_calendar_id ?? $this->createCalendarIfMissing();
+        return $this->calendarService->events->delete($calendarId, $eventId);
     }
+
+
+
 }

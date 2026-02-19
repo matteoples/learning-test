@@ -13,52 +13,84 @@ use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-use Laravel\Socialite\Facades\Socialite;
 use App\Services\GoogleAccountService;
 
- 
-/* Route::get('/auth/redirect', function () {
-    return Socialite::driver('google')->redirect();
-})->name('auth.redirect'); */
-
+// Redirect a Google
 Route::get('/auth/redirect', function () {
-    return Socialite::driver('google')
-        ->scopes([
-            'openid',
-            'profile',
-            'email',
-            'https://www.googleapis.com/auth/calendar' // aggiungi qui Calendar
-        ])
-        ->with([
-            'access_type' => 'offline', // serve per refresh token
-            'prompt' => 'consent',       // forza richiesta dei permessi
-        ])
-        ->redirect();
+
+    $client = new \Google\Client();
+    $client->setClientId(config('services.google.client_id'));
+    $client->setClientSecret(config('services.google.client_secret'));
+    $client->setRedirectUri(route('auth.callback'));
+    
+    $client->setAccessType('offline'); // per ottenere refresh token
+    $client->setPrompt('consent');     // forza consenso ogni volta
+
+    $client->setScopes([
+        'openid',
+        'profile',
+        'email',
+        'https://www.googleapis.com/auth/calendar', // Calendar
+    ]);
+
+    // Crea URL di autorizzazione
+    $authUrl = $client->createAuthUrl();
+
+    return redirect($authUrl);
 })->name('auth.redirect');
 
-
+// Callback da Google
 Route::get('/auth/callback', function () {
-    /*$googleUser = app()->isLocal()
-    ? Socialite::driver('google')->stateless()->user()
-    : Socialite::driver('google')->user(); */
 
-    $googleUser = Socialite::driver('google')->user(); 
+    $client = new \Google\Client();
+    $client->setClientId(config('services.google.client_id'));
+    $client->setClientSecret(config('services.google.client_secret'));
+    $client->setRedirectUri(route('auth.callback'));
+    $client->setAccessType('offline');
+    $client->setPrompt('consent');
+    $client->setScopes([
+        'openid',
+        'profile',
+        'email',
+        \Google\Service\Calendar::CALENDAR,
+    ]);
 
+    // Otteniamo il token con il code che Google ha passato
+    $token = $client->fetchAccessTokenWithAuthCode(request('code'));
+
+    if (isset($token['error'])) {
+        dd('Errore durante OAuth: ', $token);
+    }
+
+    // Imposta il token sul client
+    $client->setAccessToken($token);
+
+    // Recupera le info dell'utente
+    $oauth = new \Google\Service\Oauth2($client);
+    $googleUser = $oauth->userinfo->get();
+
+    // Salva o aggiorna l'utente
     $user = User::updateOrCreate([
         'google_id' => $googleUser->id,
     ], [
         'name' => $googleUser->name,
         'email' => $googleUser->email,
+        'google_token' => $token['access_token'],
+        'google_refresh_token' => $token['refresh_token'] ?? null,
     ]);
 
+    // Inizializza il service per Calendar (se serve)
     $googleService = new GoogleAccountService($user);
-    $user = $googleService->handleOAuthCallback($googleUser);
+    if (!$user->google_calendar_id) {
+        $calendarId = $googleService->createCalendar('Ripetiflow');
+        $user->update(['google_calendar_id' => $calendarId]);
+    }
 
+    // Login dell'utente
     Auth::login($user);
 
     return redirect('/dashboard');
-});
-
+})->name('auth.callback');
 
 Route::middleware('auth')->group(callback: function(): void {
      Route::get('/dashboard', [DashboardController::class, 'index'])

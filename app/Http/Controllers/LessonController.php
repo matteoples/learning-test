@@ -7,12 +7,18 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use App\Services\GoogleCalendarService;
+use App\Events\LessonCreated;
+use App\Events\LessonDeleted;
+use App\Events\LessonUpdated;
+
+
 class LessonController extends Controller
 {
     public function index()
     {
         $lessons = Lesson::where('user_id', auth()->id())->get();
-        return view('lessons.index', compact('lessons'));
+        return $lessons; //view('lessons.index', compact('lessons'));
     }
 
     public function create(Student $student)
@@ -39,7 +45,9 @@ class LessonController extends Controller
         $lesson->luogo = $request->luogo;
         $lesson->argomento = $request->argomento;
 
-        $lesson->save(); 
+        $lesson->save();
+
+        event(new LessonCreated($lesson));
 
         return redirect()->route('students.show', $student)
                         ->with('success', 'Lezione aggiunta!');
@@ -79,9 +87,9 @@ class LessonController extends Controller
 
     public function update(Request $request, Lesson $lesson)
     {
-        //$this->authorize('update', $lesson);
-
         $lesson->update($request->all());
+
+        event(new LessonUpdated($lesson));
 
         return redirect()->route('lessons.show', $lesson)->with('success', 'Lezione aggiornata');
     }
@@ -91,7 +99,13 @@ class LessonController extends Controller
         //$this->authorize('delete', $lesson);
 
         $student = $lesson->student;
+
+        event(new LessonDeleted($lesson));
+
         $lesson->delete();
+
+        
+
         return redirect()->route('students.show', $student)->with('success', 'Lezione eliminata');
     }
 }
