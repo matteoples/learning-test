@@ -142,6 +142,14 @@ Route::middleware('auth')->group(callback: function(): void {
    
 });
 
+Route::post('/google/sync', function () {
+    $user = Auth::user();
+    $service = new GoogleAccountService($user);
+    $count = $service->sincronizzaCalendario();
+    return back()->with('success', "Sincronizzate {$count} lezioni.");
+
+})->middleware('auth')->name('google.sync');
+
 
 Route::get('/', function () {
     return view('welcome');

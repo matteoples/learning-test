@@ -2,12 +2,16 @@
 
 namespace App\Services;
 
+use App\Models\User;
+use App\Models\Lesson;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
 use Google\Client as GoogleClient;
 use Google\Service\Calendar as GoogleCalendar;
 use Google\Service\Calendar\Event;
 use Google\Service\Calendar\EventDateTime;
-use Carbon\Carbon;
-use App\Models\User;
+
 
 class GoogleAccountService
 {
@@ -204,13 +208,65 @@ class GoogleAccountService
         return $this->calendarService->events->update($calendarId, $eventId, $event);
     }
 
-
-
     public function deleteEvent(string $calendarId, string $eventId)
     {
         return $this->calendarService->events->delete($calendarId, $eventId);
     }
 
 
+    public function sincronizzaCalendario(): int
+    {
+        $lessons = Lesson::with(['student','subject'])
+            ->where('user_id', $this->user->id)
+            ->whereNull('google_event_id')
+            ->orderByDesc('giorno')
+            ->orderByDesc('ora_inizio')
+            ->limit(40)
+            ->get();
+
+        $count = 0;
+
+        DB::beginTransaction();
+
+        try {
+
+            foreach ($lessons as $lesson) {
+
+                $title = trim(
+                    ($lesson->student->nome ?? '') . ' ' .
+                    ($lesson->student->cognome ?? '')
+                );
+
+                $description = $lesson->subject->nome ?? '';
+                if ($lesson->argomento) {
+                    $description .= ' - ' . $lesson->argomento;
+                }
+
+                $googleEvent = $this->createEvent(
+                    $this->user->google_calendar_id,
+                    $title,
+                    $lesson->giorno,
+                    $lesson->ora_inizio,
+                    $lesson->ora_fine,
+                    $description
+                );
+
+                $lesson->update([
+                    'google_event_id' => $googleEvent->id
+                ]);
+
+                $count++;
+            }
+
+            DB::commit();
+
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $count;
+    }
 
 }
