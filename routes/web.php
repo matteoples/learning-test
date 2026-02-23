@@ -151,6 +151,17 @@ Route::post('/google/sync', function () {
 })->middleware('auth')->name('google.sync');
 
 
+Route::post('/google/reset', function () {
+    $user = Auth::user();
+    $service = new GoogleAccountService($user);
+
+    // Chiama il metodo resetCalendario() per eliminare tutti gli eventi Google
+    $count = $service->resetCalendario();
+
+    return back()->with('success', "Cancellati {$count} eventi dal calendario.");
+})->middleware('auth')->name('google.reset');
+
+
 Route::get('/', function () {
     return view('welcome');
 });

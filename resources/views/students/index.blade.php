@@ -15,14 +15,6 @@
         Nuovo Studente
     </a> --}}
 
-    <form action="{{ route('google.sync') }}" method="POST">
-        @csrf
-        <button type="submit"
-            class="primary-button px-3 py-3 sm:px-4 flex items-center gap-2">
-            Sincronizza Google Calendar
-        </button>
-    </form>
-
     <a href="{{ route('students.create') }}" class="primary-button px-3 py-3 sm:px-4 flex items-center gap-2">
         <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
         <span class="hidden sm:inline">Nuovo Studente</span>

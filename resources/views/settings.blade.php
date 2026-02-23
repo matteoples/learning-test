@@ -173,7 +173,66 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     </div>
+
+
+
+   <div class="section p-6 flex flex-col gap-4 h-full">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="primary-text text-xl font-semibold">Google Calendar</h2>
+        </div>
+
+        {{-- Sincronizza --}}
+        <div class="flex flex-col md:flex-row items-start justify-between w-full  mx-auto py-4 border-b border-gray-200">
+            <div class="flex flex-col w-full md:w-[400px] mb-4 md:mb-0">
+                <p class="primary-text font-medium">Sincronizza Google Calendar</p>
+                <p class="secondary-text text-sm">
+                    Aggiunge al Google Calendar tutte le lezioni presenti solamente nel calendario interno dell'app.
+                </p>
+            </div>
+
+            <form action="{{ route('google.sync') }}" method="POST" class="w-full md:w-auto">
+                @csrf
+                <button type="submit"
+                    class="primary-button px-3 py-3 sm:px-4 w-full md:w-auto">
+                    <div class="flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        Sincronizza
+                    </div>
+                </button>
+            </form>
+        </div>
+
+        {{-- Resetta / Inizializza --}}
+        <div class="flex flex-col md:flex-row items-start justify-between w-full mx-auto py-4">
+            <div class="flex flex-col w-full md:w-[400px] mb-4 md:mb-0">
+                <p class="primary-text font-medium">Inizializza Google Calendar</p>
+                <p class="secondary-text text-sm">
+                    Rimuove tutte le ripetizioni dal Google Calendar, preservandole nel calendario interno dell'app.
+                </p>
+            </div>
+
+            <form action="{{ route('google.reset') }}" method="POST" class="w-full md:w-auto">
+                @csrf
+                <button type="submit"
+                    class="destructive-button px-3 py-3 sm:px-4 w-full md:w-auto">
+                    <div class="flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                        </svg>
+                        Inizializza
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+
 </main>
+
+
 
 
 

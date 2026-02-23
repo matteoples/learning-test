@@ -95,7 +95,7 @@ class GoogleAccountService
         return $createdCalendar->id;
     }
 
-    public function createEvent(
+    /* public function createEvent(
         string $calendarId,
         string $summary,
         ?string $giorno = null,
@@ -132,6 +132,49 @@ class GoogleAccountService
             'timeZone' => config('app.timezone'),
         ]));
 
+        return $this->calendarService->events->insert($calendarId, $event);
+    } */
+
+    public function createEvent(
+        string $calendarId,
+        string $summary,
+        ?string $giorno = null,
+        ?string $oraInizio = null,
+        ?string $oraFine = null,
+        ?string $description = null,
+    ) {
+        // Costruisci start/end con Carbon usando la timezone corretta
+        try {
+            if ($giorno && $oraInizio && $oraFine) {
+                $start = Carbon::parse("{$giorno} {$oraInizio}", config('app.timezone'));
+                $end   = Carbon::parse("{$giorno} {$oraFine}", config('app.timezone'));
+            } else {
+                // fallback se manca data/ora
+                $start = Carbon::parse('2026-01-01 00:00:00', config('app.timezone'));
+                $end   = (clone $start)->addMinutes(5);
+            }
+        } catch (\Exception $e) {
+            // fallback in caso di parsing fallito
+            $start = Carbon::parse('2026-01-01 00:00:00', config('app.timezone'));
+            $end   = (clone $start)->addMinutes(5);
+        }
+
+        $event = new Event();
+        $event->setSummary($summary);
+        $event->setDescription($description);
+
+        // Crea oggetti EventDateTime per start e end
+        $startEvent = new EventDateTime();
+        $startEvent->setDateTime($start->toIso8601String());
+        $startEvent->setTimeZone(config('app.timezone'));
+        $event->setStart($startEvent);
+
+        $endEvent = new EventDateTime();
+        $endEvent->setDateTime($end->toIso8601String());
+        $endEvent->setTimeZone(config('app.timezone'));
+        $event->setEnd($endEvent);
+
+        // Inserisci l'evento su Google Calendar
         return $this->calendarService->events->insert($calendarId, $event);
     }
 
@@ -267,6 +310,34 @@ class GoogleAccountService
         }
 
         return $count;
+    }
+
+
+    public function resetCalendario(): int
+    {
+        // Prendi tutte le lezioni dell'utente che hanno un google_event_id
+        $lessons = Lesson::where('user_id', $this->user->id)
+            ->whereNotNull('google_event_id')
+            ->get();
+
+        $count = 0;
+
+        foreach ($lessons as $lesson) {
+            try {
+                // Elimina l'evento dal Google Calendar
+                $this->deleteEvent($this->user->google_calendar_id, $lesson->google_event_id);
+
+                // Azzeriamo l'ID dell'evento nel DB
+                $lesson->update(['google_event_id' => null]);
+
+                $count++;
+            } catch (\Throwable $e) {
+                // Log in caso di errore ma continuiamo con le altre lezioni
+                \Log::error("Errore cancellando evento Google ID {$lesson->google_event_id}: " . $e->getMessage());
+            }
+        }
+
+        return $count; // ritorna il numero di eventi cancellati
     }
 
 }
