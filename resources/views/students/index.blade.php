@@ -5,22 +5,12 @@
 
 @section('action-buttons')
 <div class="flex items-center gap-4">
-    {{-- <a href="{{ route('students.import.form') }}" class="primary-button opacity-50 pointer-events-none">
-        Importa da JSON
-    </a> --}}
-
-    {{-- Primary Button --}}
-{{--     <a href="{{ route('students.create') }}" class="primary-button px-4 py-2">
-        <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
-        Nuovo Studente
-    </a> --}}
-
     <a href="{{ route('students.create') }}" class="primary-button px-3 py-3 sm:px-4 flex items-center gap-2">
-        <img src="{{ asset('img/add.png') }}" alt="Aggiungi" class="w-4 h-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
         <span class="hidden sm:inline">Nuovo Studente</span>
     </a>
-
-    
 </div>
 @endsection
 
@@ -32,7 +22,7 @@
     @forelse($students as $student)
         <a href="{{ route('students.show', $student) }}" class="block">
             <div class="card p-4">
-                <h3 class="primary-text text-lg font-semibold">{{ $student->nome }} {{ $student->cognome }}</h3>
+                <x-headline> {{ $student->getNomeCognome() }} </x-headline>
                 <p class="secondary-text text-sm mt-1">Classe: {{ $student->classe ?? '-' }}</p>
             </div>
         </a>

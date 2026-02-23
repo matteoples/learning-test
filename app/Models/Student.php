@@ -27,18 +27,16 @@ class Student extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
-    // Relazione con lezioni
     public function lessons() {
         return $this->hasMany(Lesson::class)->orderBy('giorno', 'desc')->orderBy('ora_inizio', 'desc');;
     } 
 
-    // Relazione con pagamenti
     public function payments() {
         return $this->hasMany(Payment::class);
     } 
 
-    public function getNomeCompleto() {
+    // Computed Property
+    public function getNomeCognome() {
         if ($this->nome || $this->cognome) {
             return trim($this->nome . ' ' . $this->cognome);
         }
@@ -59,36 +57,8 @@ class Student extends Model
         return $iniziali ?: null;
     }
 
-    public function getTotalPayments() {
-        return floor($this->payments()->sum('importo'));
-    }
 
-    public function getTotalLessons() {
-        // somma delle ore in formato decimale
-        $totalHours = $this->lessons->sum(function ($lesson) {
-            $start = Carbon::parse($lesson->ora_inizio);
-            $end = Carbon::parse($lesson->ora_fine);
-            return $start->floatDiffInHours($end);
-        });
-
-        return $totalHours;
-    }
-
-    public function getTotalLessonsFormatted() {
-        $totalHours =  $this->getTotalLessons();
-
-        // parte intera delle ore
-        $hours = floor($totalHours);
-
-        // minuti ricavati dalla parte decimale
-        $minutes = round(($totalHours - $hours) * 60);
-
-        if ($minutes==0) {
-            return "{$hours}h";
-        }
-        return "{$hours}h {$minutes}min";
-    }
-
+    //Saldo
     public function saldo() {
         $totaleDebiti = $this->tariffa_oraria * $this->getTotalLessons();
         $totaleDebiti = ceil($totaleDebiti);
@@ -98,7 +68,6 @@ class Student extends Model
         return $totaleCrediti - $totaleDebiti;
 
     }
-
 
     public function saldoOrario() {
         if ($this->tariffa_oraria == 0) { return 0; }
@@ -123,6 +92,36 @@ class Student extends Model
         return $oreIntere + $frazione;
     }
 
+    public function getTotalLessons() {
+        // somma delle ore in formato decimale
+        $totalHours = $this->lessons->sum(function ($lesson) {
+            $start = Carbon::parse($lesson->ora_inizio);
+            $end = Carbon::parse($lesson->ora_fine);
+            return $start->floatDiffInHours($end);
+        });
+
+        return $totalHours;
+    }
+
+    public function getTotalPayments() {
+        return floor($this->payments()->sum('importo'));
+    }
+
+
+    public function getTotalLessonsFormatted() {
+        $totalHours =  $this->getTotalLessons();
+
+        // parte intera delle ore
+        $hours = floor($totalHours);
+
+        // minuti ricavati dalla parte decimale
+        $minutes = round(($totalHours - $hours) * 60);
+
+        if ($minutes==0) {
+            return "{$hours}h";
+        }
+        return "{$hours}h {$minutes}min";
+    }
 
     public function saldoOrarioFormatted() {
         $saldo = $this->saldoOrario(); // ottieni ore decimali arrotondate
@@ -138,38 +137,5 @@ class Student extends Model
 
         return "{$ore}h {$minuti}min";
     }
-
-
-
-
-
-
-    
-    public function hasDebt()
-    {
-        return $this->getDebitHours() > 0;
-    }
-
-    public function getCreditHours() {
-        
-        $paidHours = $this->payments()->sum('numero_ore');
-        $doneHours = $this->getTotalLessons();
-
-        $credit = $paidHours - $doneHours;
-
-        return $credit > 0 ? $credit : 0;
-        
-    }
-
-    public function getDebitHours() {
-        $paidHours = $this->payments()->sum('numero_ore');
-        $doneHours = $this->getTotalLessons();
-
-        $debit = $doneHours - $paidHours;
-
-        return $debit > 0 ? $debit : 0;
-    }
-        
-
 
 }

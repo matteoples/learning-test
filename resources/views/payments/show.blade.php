@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @php
-    $studentName = $payment->student->getNomeCompleto();
+    $studentName = $payment->student->getNomeCognome();
 @endphp
 
 @section('page-title')

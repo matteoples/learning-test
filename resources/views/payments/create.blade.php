@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @php
-    $studentName = $student->getNomeCompleto();
+    $studentName = $student->getNomeCognome();
     $modalitaOptions = ['Contanti','Bonifico','PayPal','Satispay','Revolut'];
 @endphp
 

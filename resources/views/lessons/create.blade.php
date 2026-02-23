@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @php
-    $studentName = $student->getNomeCompleto();
+    $studentName = $student->getNomeCognome();
     $luoghi = ['Online', 'Casa Tutor', 'Casa Cliente', 'Biblioteca', 'Altro'];
 @endphp
 

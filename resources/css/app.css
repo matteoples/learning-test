@@ -72,32 +72,34 @@
 
 
 
-
-.secondary-button {
-    @apply px-3 py-2 rounded-lg items-center gap-2 transition;
-    color: var(--primary-text);
-    border: 2px solid var(--box-border);
-    background-color: transparent;
-}
-.secondary-button:hover {
-    background-color: var(--bg-hover); /* o una variabile hover */
-}
-
-
 .primary-button {
-    @apply rounded-lg items-center gap-2 transition justify-center;
+    @apply px-4 py-2 flex items-center justify-center gap-2 rounded-lg transition;
     color: #ffffff;
     border: 2px solid var(--accent-color);
     background-color: var(--accent-color);
 }
+
 .primary-button:hover {
     background-color: var(--accent-color-hover);
     border-color: var(--accent-color-hover);
 }
+
+.secondary-button {
+    @apply px-4 py-2 flex items-center justify-center gap-2 rounded-lg transition font-medium;
+    color: var(--primary-text);
+    border: 2px solid var(--box-border);
+    background-color: transparent;
+}
+
+.secondary-button:hover {
+    background-color: var(--bg-hover);
+}
+
 .inline-button {
     background-color: var(--accent-color);
     color: var(--primary-text);
 }
+
 
 .destructive-button {
     @apply rounded-lg items-center gap-2 transition justify-center;

@@ -95,46 +95,6 @@ class GoogleAccountService
         return $createdCalendar->id;
     }
 
-    /* public function createEvent(
-        string $calendarId,
-        string $summary,
-        ?string $giorno = null,
-        ?string $oraInizio = null,
-        ?string $oraFine = null,
-        ?string $description = null,
-    ) {
-
-        try {
-            if ($giorno && $oraInizio && $oraFine) {
-                $start = Carbon::parse($giorno . ' ' . $oraInizio, config('app.timezone'));
-                $end = Carbon::parse($giorno . ' ' . $oraFine, config('app.timezone'));
-            } else {
-                $start = Carbon::parse('2026-01-01 00:00:00', config('app.timezone'));
-                $end   = (clone $start)->addMinutes(5);
-            }
-        } catch (\Exception $e) {
-            $start = Carbon::parse('2026-01-01 00:00:00', config('app.timezone'));
-            $end   = (clone $start)->addMinutes(5);
-        }
-
-        $event = new Event();
-
-        $event->setSummary($summary);
-        $event->setDescription($description);
-
-        $event->setStart(new EventDateTime([
-            'dateTime' => $start->toIso8601String(),
-            'timeZone' => config('app.timezone'),
-        ]));
-
-        $event->setEnd(new EventDateTime([
-            'dateTime' => $end->toIso8601String(),
-            'timeZone' => config('app.timezone'),
-        ]));
-
-        return $this->calendarService->events->insert($calendarId, $event);
-    } */
-
     public function createEvent(
         string $calendarId,
         string $summary,
@@ -251,6 +211,7 @@ class GoogleAccountService
         return $this->calendarService->events->update($calendarId, $eventId, $event);
     }
 
+    
     public function deleteEvent(string $calendarId, string $eventId)
     {
         return $this->calendarService->events->delete($calendarId, $eventId);
