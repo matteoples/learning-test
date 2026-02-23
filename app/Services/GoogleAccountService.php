@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Google\Client as GoogleClient;
 use Google\Service\Calendar as GoogleCalendar;
+use Google\Service\Calendar\Event;
+use Google\Service\Calendar\EventDateTime;
 use Carbon\Carbon;
 use App\Models\User;
 
@@ -97,35 +99,34 @@ class GoogleAccountService
         ?string $oraFine = null,
         ?string $description = null,
     ) {
-        
+
         try {
             if ($giorno && $oraInizio && $oraFine) {
-                $start = Carbon::parse($giorno . ' ' . $oraInizio);
-                $end   = Carbon::parse($giorno . ' ' . $oraFine);
+                $start = Carbon::parse($giorno . ' ' . $oraInizio, config('app.timezone'));
+                $end = Carbon::parse($giorno . ' ' . $oraFine, config('app.timezone'));
             } else {
-                // fallback: giorno = 1 gennaio 2026, ora 00:00 → +5 minuti
-                $start = Carbon::parse('2026-01-01 00:00:00');
+                $start = Carbon::parse('2026-01-01 00:00:00', config('app.timezone'));
                 $end   = (clone $start)->addMinutes(5);
             }
         } catch (\Exception $e) {
-            // fallback se il parsing fallisce
-            $start = Carbon::parse('2026-01-01 00:00:00');
+            $start = Carbon::parse('2026-01-01 00:00:00', config('app.timezone'));
             $end   = (clone $start)->addMinutes(5);
         }
 
+        $event = new Event();
 
-        $event = new \Google\Service\Calendar\Event([
-            'summary' => $summary,
-            'description' => $description,
-            'start' => [
-                'dateTime' => $start->toIso8601String(),
-                'timeZone' => config('app.timezone'),
-            ],
-            'end' => [
-                'dateTime' => $end->toIso8601String(),
-                'timeZone' => config('app.timezone'),
-            ],
-        ]);
+        $event->setSummary($summary);
+        $event->setDescription($description);
+
+        $event->setStart(new EventDateTime([
+            'dateTime' => $start->toIso8601String(),
+            'timeZone' => config('app.timezone'),
+        ]));
+
+        $event->setEnd(new EventDateTime([
+            'dateTime' => $end->toIso8601String(),
+            'timeZone' => config('app.timezone'),
+        ]));
 
         return $this->calendarService->events->insert($calendarId, $event);
     }
@@ -146,14 +147,14 @@ class GoogleAccountService
         // Combina giorno e ora in Carbon per i nuovi valori
         try {
             if ($giorno && $oraInizio && $oraFine) {
-                $newStart = Carbon::parse($giorno . ' ' . $oraInizio);
-                $newEnd   = Carbon::parse($giorno . ' ' . $oraFine);
+                $newStart = Carbon::parse($giorno . ' ' . $oraInizio, config('app.timezone'));
+                $newEnd   = Carbon::parse($giorno . ' ' . $oraFine, config('app.timezone'));
             } else {
-                $newStart = Carbon::parse('2026-01-01 00:00:00');
+                $newStart = Carbon::parse('2026-01-01 00:00:00', config('app.timezone'));
                 $newEnd   = (clone $newStart)->addMinutes(5);
             }
         } catch (\Exception $e) {
-            $newStart = Carbon::parse('2026-01-01 00:00:00');
+            $newStart = Carbon::parse('2026-01-01 00:00:00', config('app.timezone'));
             $newEnd   = (clone $newStart)->addMinutes(5);
         }
 
@@ -175,18 +176,22 @@ class GoogleAccountService
         $currentEnd   = Carbon::parse($event->end->dateTime)->toIso8601String();
 
         if ($currentStart !== $newStart->toIso8601String()) {
-            $event->setStart([
-                'dateTime' => $newStart->toIso8601String(),
-                'timeZone' => config('app.timezone'),
-            ]);
+            $event->setStart(
+                new EventDateTime([
+                    'dateTime' => $newStart->toIso8601String(),
+                    'timeZone' => config('app.timezone'),
+                ])
+            );
             $updateNeeded = true;
         }
 
         if ($currentEnd !== $newEnd->toIso8601String()) {
-            $event->setEnd([
-                'dateTime' => $newEnd->toIso8601String(),
-                'timeZone' => config('app.timezone'),
-            ]);
+            $event->setEnd(
+                new EventDateTime([
+                    'dateTime' => $newEnd->toIso8601String(),
+                    'timeZone' => config('app.timezone'),
+                ])
+            );
             $updateNeeded = true;
         }
 

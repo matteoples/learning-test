@@ -11,12 +11,22 @@ class UpdateLessonOnGoogleCalendar
 {
     public function handle(LessonUpdated $event)
     {
+
         $lesson = $event->lesson;
         $user = $lesson->user;
 
-        // Controlla che l'utente abbia token e calendar_id
-        if (!$user->google_access_token || !$user->google_refresh_token || !$user->google_calendar_id) {
-            Log::warning("Utente {$user->id} mancano token o calendar_id, skip Google update");
+        if (!$user->google_token) {
+            dd("Manca il google Token");
+            return;
+        }
+
+        if (!$user->google_refresh_token) {
+            dd("Manca il google_refresh_token");
+            return;
+        }
+
+        if (!$user->google_calendar_id) {
+            dd("Manca il calendar_id");
             return;
         }
 
@@ -30,37 +40,19 @@ class UpdateLessonOnGoogleCalendar
             $description .= ' - ' . $lesson->argomento;
         }
 
-        // Se l'evento esiste già
+
         if ($lesson->google_event_id) {
+            $updated = $service->updateEvent(
+                $user->google_calendar_id,
+                $lesson->google_event_id,
+                $title,
+                $lesson->giorno,
+                $lesson->ora_inizio,
+                $lesson->ora_fine,
+                $description
+            );
 
-            // Recupera l'evento dal servizio Google
-            $eventGoogle = $service->getEvent($user->google_calendar_id, $lesson->google_event_id);
-
-            // Estrai i valori correnti
-            $currentTitle = $eventGoogle->getSummary();
-            $currentDescription = $eventGoogle->getDescription();
-            $currentStart = Carbon::parse($eventGoogle->start->dateTime)->toIso8601String();
-            $currentEnd = Carbon::parse($eventGoogle->end->dateTime)->toIso8601String();
-
-            // Calcola i nuovi valori
-            $newStart = Carbon::parse($lesson->giorno . ' ' . $lesson->ora_inizio)->toIso8601String();
-            $newEnd   = Carbon::parse($lesson->giorno . ' ' . $lesson->ora_fine)->toIso8601String();
-
-            // Confronta i campi
-            if ($title !== $currentTitle ||
-                $description !== $currentDescription ||
-                $newStart !== $currentStart ||
-                $newEnd !== $currentEnd
-            ) {
-                $service->updateEvent(
-                    $user->google_calendar_id,
-                    $lesson->google_event_id,
-                    $title,
-                    $lesson->giorno,
-                    $lesson->ora_inizio,
-                    $lesson->ora_fine,
-                    $description
-                );
+            if ($updated) {
                 Log::info("Evento Google aggiornato per lezione {$lesson->id}");
             } else {
                 Log::info("Nessuna modifica per lezione {$lesson->id}, skip update Google");
