@@ -9,17 +9,15 @@
 @endphp
 
 @section('page-title')
-Modifica Lezione
-<span class="hidden md:inline"> di {{ $studentName }}</span>
+Modifica Lezione <span class="hidden md:inline"> di {{ $studentName }}</span>
 @endsection
 @section('back-button-route', route('students.show', $lesson->student))
 
 @section('action-buttons')
-<div class="flex gap-2">
-    <button type="submit" form="edit-lesson-form" class="primary-button px-4 py-2">
-        Salva
-    </button>
-</div>
+<x-button type="submit" form="edit-lesson-form"> 
+    <span class="md:hidden">Salva</span>
+    <span class="hidden md:inline">Salva Modifiche</span>
+</x-button>
 @endsection
 
 @section('content')
@@ -102,10 +100,9 @@ Modifica Lezione
     <form action="{{ route('lessons.destroy', $lesson) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questa lezione?');">
         @csrf
         @method('DELETE')
+
         <div class="flex justify-end">
-            <button type="submit" class="destructive-button px-4 py-2">
-                Elimina Lezione
-            </button>
+            <x-button type="submit" variant="destructive"> Elimina Lezione </x-button>
         </div>
     </form>
 </div>

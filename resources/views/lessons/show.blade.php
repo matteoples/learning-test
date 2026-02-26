@@ -12,8 +12,8 @@ Dettagli Lezione
 
 @section('action-buttons')
 <div class="flex gap-2">
-    <a href="{{ route('lessons.edit', $lesson) }}" class="primary-button px-4 py-2">
-        Modifica
+    <a href="{{ route('lessons.edit', $lesson) }}">
+        <x-button> Modifica </x-button>
     </a>
 </div>
 @endsection

@@ -1,3 +1,7 @@
+@php
+use App\Enums\FontWeight as FW;
+@endphp
+
 @extends('layouts.app')
 
 @section('page-title', 'Dettagli Studente')
@@ -6,9 +10,9 @@
 @section('action-buttons')
 <div class="flex gap-2">
     {{-- Esporta --}}
-    <a href="#" class="primary-button px-4 py-2 opacity-50 pointer-events-none">
+    {{-- <a href="#" class="primary-button px-4 py-2 opacity-50 pointer-events-none">
         Esporta dati
-    </a>
+    </a> --}}
 
 </div>
 @endsection
@@ -19,7 +23,7 @@
     <div class="flex flex-col gap-4 w-full lg:w-[40%]">
         
         {{-- ANAGRAFICA --}}
-        <x-box-container>
+        <x-box-container size="large">
             <div class="flex justify-between items-center">
                 <x-title> Anagrafica</x-title>
                 <x-button href="{{ route('students.edit', $student) }}" 
@@ -40,7 +44,7 @@
         </x-box-container>
 
         {{-- SEZIONE PAGAMENTI --}}
-        <x-box-container>
+        <x-box-container size="large">
             <div class="flex justify-between items-center">
                 <x-title> Pagamenti</x-title>
                 <x-button href="{{ route('payments.create', $student) }}" 
@@ -50,12 +54,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                 @forelse ($student->payments as $payment)
                     <a href="{{ route('payments.show', $payment) }}" class="block h-full">
-                        <div class="card p-3 h-full">
-                            <div class="flex justify-between items-center">
-                                <p class="secondary-text text-xs">{{ $payment->getTextGiornoFormatted() }}</p>
-                                <p class="primary-text font-medium">€ {{ (int) $payment->importo }}</p>
-                            </div>
-                        </div>
+                        <x-box-container>
+                            <x-key-value-pair>
+                                <x-slot name="key">
+                                    <x-text> {{ $payment->getTextGiornoFormatted() }} </x-text>
+                                </x-slot>
+
+                                <x-slot name="value">
+                                    <x-headline :weight="FW::Bold"> € {{ (int) $payment->importo }} </x-headline>
+                                </x-slot>
+                            </x-key-value-pair>
+                        </x-box-container>
                     </a>
                 @empty
                     <div class="p-4">
@@ -72,33 +81,47 @@
         {{-- SEZIONE STATISTICHE --}}
         <div class="flex flex-col md:flex-row gap-4">
             <x-box-container class="flex-1">
-                <div class="flex justify-between">
-                    <p class="primary-text font-medium">Totale pagamenti</p>
-                    <p class="primary-text"> € {{ $student->getTotalPayments() }} </p>
-                </div>
+                <x-key-value-pair>
+                    <x-slot name="key">
+                        <x-text> Totale pagamenti </x-text>
+                    </x-slot>
 
-                <div class="flex justify-between">
-                    <p class="primary-text font-medium">Totale ore fatte</p>
-                    <p class="primary-text"> € {{ $student->getTotalLessonsFormatted() }} </p>
-                </div>
+                    <x-slot name="value">
+                        <x-text :weight="FW::Semibold"> € {{ $student->getTotalPayments() }} </x-text>
+                    </x-slot>
+                </x-key-value-pair>
+
+                <x-key-value-pair>
+                    <x-slot name="key">
+                        <x-text> Totale ore fatte </x-text>
+                    </x-slot>
+
+                    <x-slot name="value">
+                        <x-text :weight="FW::Semibold"> {{ $student->getTotalLessonsFormatted() }} </x-text>
+                    </x-slot>
+                </x-key-value-pair>
             </x-box-container>
 
             <x-box-container class="flex-1">
-                <div class="flex justify-between">
-                    <p class="primary-text font-medium">
-                        Importo @if ($student->saldo() > 0) Credito @else Debito @endif
-                    </p>
-                
-                    <p class="primary-text"> € {{abs($student->saldo())}} </p>
-                </div>
+                <x-key-value-pair>
+                    <x-slot name="key">
+                        <x-text> Importo @if ($student->saldo() > 0) Credito @else Debito @endif </x-text>
+                    </x-slot>
 
-                <div class="flex justify-between">
-                    <p class="primary-text font-medium">
-                        Ore di @if ($student->saldo() > 0) Credito @else Debito @endif
-                    </p>
+                    <x-slot name="value">
+                        <x-text :weight="FW::Semibold"> € {{abs($student->saldo())}} </x-text>
+                    </x-slot>
+                </x-key-value-pair>
 
-                    <p class="primary-text"> {{$student->saldoOrarioFormatted() }} </p>
-                </div>
+                <x-key-value-pair>
+                    <x-slot name="key">
+                        <x-text> Ore di @if ($student->saldo() > 0) Credito @else Debito @endif </x-text>
+                    </x-slot>
+
+                    <x-slot name="value">
+                        <x-text :weight="FW::Semibold"> {{ $student->saldoOrarioFormatted() }} </x-text>
+                    </x-slot>
+                </x-key-value-pair>
 
                 <x-label> L'addebito dell'ora avviene al momento della prenotazione.</x-label>
             </x-box-container>
@@ -116,21 +139,20 @@
                 </div>
 
 
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-3">
                     @forelse ($student->lessons as $lesson)
                         <a href="{{ route('lessons.show', $lesson) }}" class="block h-full">
-                            <div class="card p-3 h-full">
-                                <div class="flex justify-between items-center mb-1">
-                                    <p class="secondary-text text-xs">{{ $lesson->getTextGiornoFormatted() }}</p>
-                                    <p class="primary-text font-large"> {{ $lesson->getDurataFormatted() }}</p>
+
+                            <x-box-container class="h-full">
+                                <div class="flex justify-between items-center">
+                                    <x-label> {{ $lesson->getTextGiornoFormatted() }} - {{ $lesson->getOraInizioFormatted() }} : {{ $lesson->getOraFineFormatted() }}</x-label>
+                                    <x-text> {{ $lesson->getDurataFormatted() }} </x-text>
                                 </div>
                                 <div class="pr-5 flex-1">
-                                    <p class="primary-text font-medium">{{ $lesson->subject->nome  ?? "N/A" }}</p>
-                                    @isset($lesson->argomento)
-                                        <p class="secondary-text text-xs">{{ $lesson->argomento}}</p>
-                                    @endisset
+                                    <x-headline>{{ $lesson->subject->nome  ?? "N/A" }}</x-headline>
+                                    <x-text> {{ $lesson->argomento }} </x-text>
                                 </div>
-                            </div>
+                            </x-box-container>
                         </a>
                     @empty
                         <div class="p-4">

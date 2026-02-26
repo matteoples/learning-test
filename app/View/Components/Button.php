@@ -9,8 +9,8 @@ class Button extends Component
     public ?string $href;
     public string $variant;
     public ?string $icon;
-    public ?string $form;   // 👈 AGGIUNTO
-    public string $type;    // 👈 AGGIUNTO
+    public ?string $form;
+    public string $type;
 
     /**
      * @param string|null $href
@@ -29,17 +29,19 @@ class Button extends Component
         $this->href = $href;
         $this->variant = $variant;
         $this->icon = $icon;
-        $this->form = $form;      // 👈
-        $this->type = $type;      // 👈
+        $this->form = $form;
+        $this->type = $type;
     }
 
     public function classes(): string
+
     {
         return match($this->variant) {
-            'primary' => 'flex items-center justify-center gap-2 rounded-lg transition primary-button',
-            'secondary' => 'flex items-center gap-2 px-3 py-2 rounded-lg transition secondary-button',
-            'inline' => 'flex items-center gap-2 transition font-medium inline-button',
-            default => 'flex items-center justify-center gap-2 rounded-lg transition primary-button',
+            'primary'       => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition primary-color',
+            'destructive'   => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition destructive-color',
+            'secondary'     => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition secondary-color',
+            'inline'        => 'flex items-center justify-center gap-2 px-4 py-2 font-medium inline-color',
+            default         => 'flex items-center justify-center gap-2 rounded-lg transition primary-color',
         };
     }
 

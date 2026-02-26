@@ -3,14 +3,11 @@
 @section('page-title', 'Modifica Studente')
 @section('back-button-route', route('students.show', $student))
 
-
 @section('action-buttons')
-<div class="flex gap-2">
-    {{-- Bottone Salva (primary) --}}
-    <button type="submit" form="edit-student-form" class="primary-button px-4 py-2">
-        Salva
-    </button>
-</div>
+<x-button type="submit" form="edit-student-form"> 
+    <span class="md:hidden">Salva</span>
+    <span class="hidden md:inline">Salva Modifiche</span>
+</x-button>
 @endsection
 
 
@@ -109,9 +106,7 @@
         @csrf
         @method('DELETE')
         <div class="flex justify-end">
-            <button type="submit" class="destructive-button px-4 py-2">
-            Elimina studente
-        </button>
+            <x-button type="submit" variant="destructive"> Elimina Studente </x-button>
         </div>
     </form>
 </div>

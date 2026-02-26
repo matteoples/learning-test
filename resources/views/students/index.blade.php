@@ -5,11 +5,10 @@
 
 @section('action-buttons')
 <div class="flex items-center gap-4">
-    <a href="{{ route('students.create') }}" class="primary-button px-3 py-3 sm:px-4 flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        <span class="hidden sm:inline">Nuovo Studente</span>
+    <a href="{{ route('students.create') }}">
+        <x-button icon="add">
+            <x-text class="hidden sm:inline"> Nuovo Studente </x-text>
+        </x-button>
     </a>
 </div>
 @endsection
@@ -21,15 +20,15 @@
 
     @forelse($students as $student)
         <a href="{{ route('students.show', $student) }}" class="block">
-            <div class="card p-4">
+            
+            <x-box-container>
                 <x-headline> {{ $student->getNomeCognome() }} </x-headline>
-                <p class="secondary-text text-sm mt-1">Classe: {{ $student->classe ?? '-' }}</p>
-            </div>
+                <x-label> Classe: {{ $student->classe ?? '-' }} </x-label>
+            </x-box-container>
+            
         </a>
     @empty
-        <p class="secondary-text col-span-full text-center py-10">
-            Non ci sono studenti da mostrare.
-        </p>
+        <x-label class="text-center"> Non ci sono studenti da mostrare </x-label>
     @endforelse
 
 </div>

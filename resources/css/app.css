@@ -70,44 +70,38 @@
 
 }
 
-
-
-.primary-button {
-    @apply px-4 py-2 flex items-center justify-center gap-2 rounded-lg transition;
+.primary-color {
     color: #ffffff;
     border: 2px solid var(--accent-color);
     background-color: var(--accent-color);
 }
 
-.primary-button:hover {
+.primary-color:hover {
     background-color: var(--accent-color-hover);
     border-color: var(--accent-color-hover);
 }
 
-.secondary-button {
-    @apply px-4 py-2 flex items-center justify-center gap-2 rounded-lg transition font-medium;
+.secondary-color {
     color: var(--primary-text);
     border: 2px solid var(--box-border);
     background-color: transparent;
 }
 
-.secondary-button:hover {
+.secondary-color:hover {
     background-color: var(--bg-hover);
 }
 
-.inline-button {
+.inline-color {
     background-color: var(--accent-color);
     color: var(--primary-text);
 }
 
-
-.destructive-button {
-    @apply rounded-lg items-center gap-2 transition justify-center;
+.destructive-color {
     color: #ffffff;
     border: 2px solid #C9372C;
     background-color: #C9372C;
 }
-.destructive-button:hover {
+.destructive-color:hover {
     background-color: #872821;
     border-color: #872821;
 }

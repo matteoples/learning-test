@@ -5,15 +5,15 @@
 @endphp
 
 @section('page-title')
-Pagamento
-<span class="hidden md:inline"> di {{ $studentName }}</span>
+Pagamento <span class="hidden md:inline"> di {{ $studentName }}</span>
 @endsection
 @section('back-button-route', route('students.show', $payment->student))
 
 @section('action-buttons')
+
 <div class="flex gap-2">
-    <a href="{{ route('payments.edit', $payment) }}" class="primary-button px-4 py-2">
-        Modifica
+    <a href="{{ route('payments.edit', $payment) }}">
+        <x-button> Modifica </x-button>
     </a>
 </div>
 @endsection

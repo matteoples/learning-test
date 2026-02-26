@@ -6,18 +6,15 @@
 @endphp
 
 @section('page-title')
-Nuovo Pagamento
-<span class="hidden md:inline"> per {{ $studentName }}</span>
+Nuovo Pagamento <span class="hidden md:inline"> per {{ $studentName }}</span>
 @endsection
 @section('back-button-route', route('students.show', $student))
 
 @section('action-buttons')
-<div class="flex gap-2">
-    {{-- Bottone Salva --}}
-    <button type="submit" form="create-payment-form" class="primary-button px-4 py-2">
-        Salva
-    </button>
-</div>
+<x-button type="submit" form="create-payment-form"> 
+    <span class="md:hidden">Salva</span>
+    <span class="hidden md:inline">Salva Modifiche</span>
+</x-button>
 @endsection
 
 

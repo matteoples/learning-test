@@ -81,79 +81,74 @@ una nuova lezione per il dato studente.
     
     <!-- Due colonne 50% ciascuna -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-       <div class="section flex flex-col">
-
+        <x-box-container size="large">
             <x-title> Prossimi Appuntamenti</x-title>
-
-            <div class="mt-2 flex flex-col gap-2">
-                @forelse($nextLessons as $lesson)
-                        <div class="card p-3 h-full">
-                            <div class="flex justify-between items-center mb-1">
-                                <p class="secondary-text text-xs">{{ $lesson->getTextGiornoFormatted() }}    -    {{ $lesson->getOraInizioFormatted() }} : {{ $lesson->getOraFineFormatted() }}</p>
-                                <p class="primary-text font-large"> {{ $lesson->durata() }} h</p>
-                            </div>
-                            <div class="pr-5 flex-1">
-                                <p class="primary-text text-lg font-medium">{{ $lesson->student->getNomeCognome() }}</p>
-                                <p class="primary-text text-sm "> {{ $lesson->descrizione() }} </p>
-
-                                
-                                
-                            </div>
-                        </div>
-
-                @empty
-                    <p class="text-sm text-gray-400 mt-2">Nessun prossimo appuntamento.</p>
-                @endforelse
-            </div>
-        </div>
+            @forelse($nextLessons as $lesson)
+                <x-box-container>
+                    <div class="flex justify-between items-center mb-2">
+                        <x-label> {{ $lesson->getTextGiornoFormatted() }} - {{ $lesson->getOraInizioFormatted() }} : {{ $lesson->getOraFineFormatted() }}</x-label>
+                        <x-text> {{ $lesson->getDurataFormatted() }} </x-text>
+                    </div>
+                    <div class="pr-5 flex-1">
+                        <x-headline>{{ $lesson->student->getNomeCognome() }}</x-headline>
+                        <x-text> {{ $lesson->descrizione() }} </x-text>
+                    </div>
+                </x-box-container>
+            @empty
+                <x-label> Nessun prossimo appuntamento. </x-label>
+            @endforelse
+        </x-box-container>
 
         <div class="flex flex-col gap-4">
+
             {{-- Debiti --}}
-            <div class="section flex flex-col">
-
+            <x-box-container size="large">
                 <x-title> Debiti </x-title>
-
                 <div class="flex flex-col gap-2">
                     @forelse($debts as $student)
                         <a href="{{ route('payments.create', ['student' => $student->id]) }}">
-                            <div class="card p-3 h-full">
-                                <div class="flex justify-between items-center">
-                                    <p class="primary-text text-sm">{{ $student->getNomeCognome() }}</p>
-                                    <p class="font-semibold text-red-600"> € {{ abs($student->saldo()) }} </p>
-                                </div>
-                            </div>
+                            <x-box-container>
+                                <x-key-value-pair>
+                                    <x-slot name="key">
+                                        <x-text> {{ $student->getNomeCognome() }} </x-text>
+                                    </x-slot>
+
+                                    <x-slot name="value">
+                                        <x-headline :weight="FW::Bold" color="red"> € {{ abs($student->saldo()) }} </x-headline>
+                                    </x-slot>
+                                </x-key-value-pair>
+                            </x-box-container>
                         </a>
                     @empty
-                        <p class="text-sm text-gray-400 mt-2">Nessun debito.</p>
+                        <x-label> Nessun debito. </x-label>
                     @endforelse
                 </div>
-            </div>
+            </x-box-container>
 
             {{-- Crediti --}}
-            <div class="section flex flex-col">
-
+            <x-box-container size="large">
                 <x-title> Crediti </x-title>
-
-                <div class="flex flex-col gap-2">
-                    @forelse($credits as $student)
+                @forelse($credits as $student)
                         <a href="{{ route('lessons.create', ['student' => $student->id]) }}">
-                            <div class="card p-3 h-full">
-                                <div class="flex justify-between items-center">
-                                    <p class="primary-text text-sm">{{ $student->getNomeCognome() }}</p>
-                                    <p class="font-semibold text-green-600"> € {{ abs($student->saldo()) }} </p>
-                                </div>
-                            </div>
+                            <x-box-container>
+                                <x-key-value-pair>
+                                    <x-slot name="key">
+                                        <x-text> {{ $student->getNomeCognome() }} </x-text>
+                                    </x-slot>
+
+                                    <x-slot name="value">
+                                        <x-headline :weight="FW::Bold" color="green"> € {{ abs($student->saldo()) }} </x-headline>
+                                    </x-slot>
+                                </x-key-value-pair>
+                            </x-box-container>
                         </a>
                     @empty
-                        <p class="text-sm text-gray-400 mt-2">Nessun credito.</p>
+                        <x-label> Nessun credito. </x-label>
                     @endforelse
-                </div>
-            </div>  
+
+            </x-box-container>  
 
         </div>
-
-
     </div>
-
 </main>
 @endsection

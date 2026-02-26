@@ -5,24 +5,21 @@
     $modalitaOptions = ['Contanti','Bonifico','PayPal','Satispay','Revolut'];
 @endphp
 
-@section('page-title')
-Modifica Pagamento
-<span class="hidden md:inline"> di {{ $studentName }}</span>
+@section('page-title') 
+Modifica Pagamento <span class="hidden md:inline"> di {{ $studentName }}</span>
 @endsection
 @section('back-button-route', route('students.show', $payment->student))
 
 @section('action-buttons')
-<div class="flex gap-2">
-    <button type="submit" form="create-payment-form" class="primary-button px-4 py-2">
-        <span class="md:hidden">Salva</span>
-        <span class="hidden md:inline">Salva Modifiche</span>
-    </button>
-</div>
+<x-button type="submit" form="edit-student-form"> 
+    <span class="md:hidden">Salva</span>
+    <span class="hidden md:inline">Salva Modifiche</span>
+</x-button>
 @endsection
 
 @section('content')
 
-<form id="create-payment-form"
+<form id="edit-payment-form"
       action="{{ route('payments.update', $payment) }}"
       method="POST"
       class="flex flex-col gap-6">
@@ -88,9 +85,7 @@ Modifica Pagamento
         @csrf
         @method('DELETE')
         <div class="flex justify-end">
-            <button type="submit" class="destructive-button px-4 py-2">
-                Elimina pagamento
-            </button>
+            <x-button type="submit" variant="destructive"> Elimina pagamento </x-button>
         </div>
     </form>
 </div>

@@ -8,10 +8,16 @@ use Illuminate\Support\Facades\View;
 class Icon extends Component
 {
     public string $name;
+    public ?string $color;
 
-    public function __construct(string $name)
+    /**
+     * @param string $name Nome dell'icona (corrispondente al file Blade in components/icons)
+     * @param string|null $color Classe Tailwind o valore CSS (opzionale)
+     */
+    public function __construct(string $name, ?string $color = null)
     {
         $this->name = $name;
+        $this->color = $color;
     }
 
     public function render()

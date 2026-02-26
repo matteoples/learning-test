@@ -5,11 +5,10 @@
 
 
 @section('action-buttons')
-<div class="flex gap-2">
-    <button type="submit" form="create-student-form" class="primary-button px-4 py-2">
-        Salva
-    </button>
-</div>
+<x-button type="submit" form="create-student-form">
+    <span class="md:hidden">Salva</span>
+    <span class="hidden md:inline">Salva Modifiche</span>
+</x-button>
 @endsection
 
 

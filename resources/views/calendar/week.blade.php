@@ -1,5 +1,6 @@
 @php
 use Carbon\Carbon;
+use App\Enums\FontWeight as FW;
 
 // Ottieni la data di riferimento per la settimana (GET param oppure oggi)
 $referenceDate = request('startOfWeek', Carbon::today()->toDateString());
@@ -19,36 +20,25 @@ $nextWeek = $startOfWeek->copy()->addWeek();
 $today = Carbon::today();
 @endphp
 
-{{-- Navigazione settimane --}}
+{{-- NAVIGAZIONE MESE --}}
 <div class="flex justify-between items-center mb-4">
-    <a href="{{ route('calendar.index', ['mode'=>'weekly', 'startOfWeek'=>$prevWeek->toDateString()]) }}"
-       class="secondary-button px-3 py-2 sm:px-2 sm:py-2">    
-        <div class="flex gap-1 items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-            <path fill-rule="evenodd" d="M4.72 9.47a.75.75 0 0 0 0 1.06l4.25 4.25a.75.75 0 1 0 1.06-1.06L6.31 10l3.72-3.72a.75.75 0 1 0-1.06-1.06L4.72 9.47Zm9.25-4.25L9.72 9.47a.75.75 0 0 0 0 1.06l4.25 4.25a.75.75 0 1 0 1.06-1.06L11.31 10l3.72-3.72a.75.75 0 0 0-1.06-1.06Z" clip-rule="evenodd" />
-            </svg>
-            <span class="hidden sm:inline">{{ $prevWeek->format('d M') }} - {{ $prevWeek->copy()->endOfWeek()->format('d M') }}</span>
-       </div>
-    
+    <a href="{{ route('calendar.index', ['mode'=>'weekly', 'startOfWeek'=>$prevWeek->toDateString()]) }}">
+        <x-button variant="secondary" icon="prev-chevron">
+            <x-text class="hidden sm:inline">
+                {{ $prevWeek->format('d M') }} - {{ $prevWeek->copy()->endOfWeek()->format('d M') }}
+            </x-text>
+        </x-button>
     </a>
 
-    <h2 class="primary-text text-lg font-semibold">
-        {{ $startOfWeek->format('d M') }} - {{ $endOfWeek->format('d M Y') }}
-    </h2>
+    <x-title> {{ $startOfWeek->format('d M') }} - {{ $endOfWeek->format('d M Y') }} </x-title>
 
-    <a href="{{ route('calendar.index', ['mode'=>'weekly', 'startOfWeek'=>$nextWeek->toDateString()]) }}"
-       class="secondary-button px-3 py-2 sm:px-2 sm:py-2">
-
-       <div class="flex gap-1 items-center">
-            <span class="hidden sm:inline">{{ $nextWeek->format('d M') }} - {{ $nextWeek->copy()->endOfWeek()->format('d M') }}</span>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-            <path fill-rule="evenodd" d="M15.28 9.47a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 1 1-1.06-1.06L13.69 10 9.97 6.28a.75.75 0 0 1 1.06-1.06l4.25 4.25ZM6.03 5.22l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L8.69 10 4.97 6.28a.75.75 0 0 1 1.06-1.06Z" clip-rule="evenodd" />
-            </svg>
-       </div>
+    <a href="{{ route('calendar.index', ['mode'=>'weekly', 'startOfWeek'=>$nextWeek->toDateString()]) }}">
+        <x-button variant="secondary" icon="next-chevron">
+            <x-text class="hidden sm:inline">{{ $nextWeek->format('d M') }} - {{ $nextWeek->copy()->endOfWeek()->format('d M') }}</x-text>
+        </x-button>
     </a>
 </div>
 
-{{-- Header giorni della settimana --}}
 
 
 {{-- Griglia della settimana --}}
@@ -67,7 +57,7 @@ $today = Carbon::today();
             {{-- Numero del giorno --}}
             <div class="p-2">
                 @if ($isToday)
-                    <span class="px-2 py-1.5 inline-button rounded-full font-semibold">
+                    <span class="px-2 py-1.5 inline-color rounded-full font-semibold">
                         {{ $dayName }} {{ $dayNumber }}
                     </span>
                 @else
@@ -77,20 +67,23 @@ $today = Carbon::today();
             <p> </p>
 
             {{-- Lezioni --}}
-            <div class="mt-9 flex flex-col gap-2 overflow-y-auto pb-6">
+            <div class="mt-5 flex flex-col gap-2 overflow-y-auto pb-6">
                 @foreach ($dayLessons as $lesson)
                     <a href="{{ route('lessons.show', $lesson->id) }}">
-                        <div class="card p-2">
-                            {{-- Orario (desktop) --}}
-                            <p class="secondary-text text-xs">
+                        <x-box-container size="small">
+                            <x-label class="hidden xl:block">
                                 {{ $lesson->getOraInizioFormatted() }} - {{ $lesson->getOraFineFormatted() }}
-                            </p>
+                            </x-label>
 
-                            {{-- Nome completo (desktop) --}}
-                            <p class="primary-text font-medium">
-                                {{ $lesson->student->getNomeCompleto() ?? 'Studente senza nome' }}
-                            </p>
-                        </div>
+                            <x-text :weight="FW::Semibold" class="hidden xl:block">
+                                {{ $lesson->student->getNomeCognome() ?? 'Studente senza nome' }}
+                            </x-text>
+                    
+                            {{-- Iniziali (mobile) --}}
+                            <x-text :weight="FW::Semibold" class="xl:hidden w-full">
+                                {{ $lesson->student->getIniziali() ?? 'SN' }}
+                            </x-text>
+                        </x-box-container>
                     </a>
                 @endforeach
             </div>
