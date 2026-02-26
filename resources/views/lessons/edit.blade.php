@@ -2,6 +2,9 @@
 
 @php
     $studentName = $lesson->student->getNomeCognome();
+    $giorno = \Carbon\Carbon::parse($lesson->giorno)->format('Y-m-d');
+    $oraInizio = \Carbon\Carbon::parse($lesson->ora_inizio)->format('H:i');
+    $oraFine = \Carbon\Carbon::parse($lesson->ora_fine)->format('H:i');
     $luoghi = ['Online', 'Casa Tutor', 'Casa Cliente', 'Biblioteca', 'Altro'];
 @endphp
 
@@ -25,75 +28,72 @@ Modifica Lezione
     @csrf
     @method('PUT')
 
-    <!-- Prima riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Giorno --}}
-        <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Giorno</label>
-            <input type="date" name="giorno"
-                   value="{{ \Carbon\Carbon::parse($lesson->giorno)->format('Y-m-d') }}"
-                   class="input-field" />
-        </div>
 
-        <div class="flex flex-row gap-4">
-            {{-- Ora inizio --}}
-            <div class="flex flex-col gap-1 flex-1">
-                <label class="primary-text text-sm font-medium">Ora inizio</label>
-                <input type="time" name="ora_inizio"
-                       value="{{ \Carbon\Carbon::parse($lesson->ora_inizio)->format('H:i') }}"
-                       class="input-field w-full" />
+    <div class="flex flex-col md:flex-row gap-8">
+        <div class="w-full md:w-[500px] flex flex-col gap-4">
+
+            {{-- Giorno --}}
+            <div class="flex flex-col gap-1">
+                <label class="primary-text text-sm font-medium">Giorno</label>
+                <input type="date" name="giorno" value="{{ $giorno }}" class="input-field" />
             </div>
 
-            {{-- Ora fine --}}
-            <div class="flex flex-col gap-1 flex-1">
-                <label class="primary-text text-sm font-medium">Ora fine</label>
-                <input type="time" name="ora_fine"
-                       value="{{ \Carbon\Carbon::parse($lesson->ora_fine)->format('H:i') }}"
-                       class="input-field w-full" />
+            {{-- Orario --}}
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col gap-1 flex-1">
+                    <label class="primary-text text-sm font-medium">Ora inizio</label>
+                    <input type="time" name="ora_inizio"
+                        value="{{ $oraInizio }}"
+                        class="input-field w-full" />
+                </div>
+
+                <div class="flex flex-col gap-1 flex-1">
+                    <label class="primary-text text-sm font-medium">Ora fine</label>
+                    <input type="time" name="ora_fine"
+                        value="{{ $oraFine }}"
+                        class="input-field w-full" />
+                </div>
             </div>
+
+
+            {{-- Luogo --}}
+            <div class="flex flex-col gap-1">
+                <label class="primary-text text-sm font-medium">Luogo</label>
+                
+                <select name="luogo" class="input-field">
+                    <option value="">---</option>
+                    @foreach($luoghi as $luogo)
+                        <option value="{{ $luogo }}" @selected(old('luogo', $lesson->luogo) === $luogo)>
+                            {{ $luogo }}
+                        </option>
+                    @endforeach
+                </select>
+
+            </div>
+
+            {{-- Materia --}}
+            <div class="flex flex-col gap-1">
+                <label class="primary-text text-sm font-medium">
+                    Materia <span class="text-red-500">*</span>
+                </label>
+                <select name="subject_id" class="input-field">
+                    <option value="">---</option>
+
+                    @foreach($userSubjects as $subject)
+                        <option value="{{ $subject->id }}" @selected($lesson->subject_id === $subject->id)>
+                            {{ $subject->nome }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+        </div>
+
+        <div class="w-full flex flex-col gap-1">
+            <label class="primary-text text-sm font-medium">Argomento</label>
+            <textarea name="argomento" rows="11" class="input-field w-full">{{ $lesson->argomento ?? '' }}</textarea>
         </div>
     </div>
-
-    <!-- Seconda riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Luogo --}}
-        <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Luogo</label>
-            
-            <select name="luogo" class="input-field">
-                <option value="">---</option>
-                @foreach($luoghi as $luogo)
-                    <option value="{{ $luogo }}" @selected(old('luogo', $lesson->luogo) === $luogo)>
-                        {{ $luogo }}
-                    </option>
-                @endforeach
-            </select>
-
-        </div>
-
-
-
-        {{-- Materia --}}
-        <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Materia</label>
-            <select name="subject_id" class="input-field">
-                <option value="">---</option>
-
-                @foreach($userSubjects as $subject)
-                    <option value="{{ $subject->id }}" @selected($lesson->subject_id === $subject->id)>
-                        {{ $subject->nome }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-
-    <!-- Terza riga -->
-    <div class="flex flex-col gap-1">
-        <label class="primary-text text-sm font-medium">Argomento</label>
-        <textarea name="argomento" rows="4" class="input-field w-full">{{ $lesson->argomento ?? '' }}</textarea>
-    </div>
-
 </form>
 
 <div class="mt-6">

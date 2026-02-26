@@ -45,6 +45,31 @@ class Lesson extends Model
         return 0;
     }
 
+    public function getDurataFormatted()
+    {
+        if (!$this->ora_inizio || !$this->ora_fine) {
+            return '0min';
+        }
+
+        $start = Carbon::parse($this->ora_inizio);
+        $end = Carbon::parse($this->ora_fine);
+
+        $minutes = $start->diffInMinutes($end);
+
+        $hours = intdiv($minutes, 60);
+        $remainingMinutes = $minutes % 60;
+
+        if ($hours > 0 && $remainingMinutes > 0) {
+            return "{$hours}h {$remainingMinutes}min";
+        }
+
+        if ($hours > 0) {
+            return "{$hours}h";
+        }
+
+        return "{$remainingMinutes}min";
+    }
+
     public function getOraInizioFormatted() {
         return Carbon::parse($this->ora_inizio)->format('H:i');
     }
@@ -64,5 +89,12 @@ class Lesson extends Model
             ->isoFormat('ddd D MMMM \'YY')
     );
     }
-}
 
+    public function descrizione() {
+        $descr = $this->subject->nome ?? "N/A";
+        if (isset($this->argomento)) {
+            $descr .= " - " . $this->argomento;
+        }
+        return $descr;
+    }
+}

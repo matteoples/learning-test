@@ -116,13 +116,13 @@
                 </div>
 
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                     @forelse ($student->lessons as $lesson)
                         <a href="{{ route('lessons.show', $lesson) }}" class="block h-full">
                             <div class="card p-3 h-full">
                                 <div class="flex justify-between items-center mb-1">
                                     <p class="secondary-text text-xs">{{ $lesson->getTextGiornoFormatted() }}</p>
-                                    <p class="primary-text font-large"> {{ $lesson->durata() }} h</p>
+                                    <p class="primary-text font-large"> {{ $lesson->getDurataFormatted() }}</p>
                                 </div>
                                 <div class="pr-5 flex-1">
                                     <p class="primary-text font-medium">{{ $lesson->subject->nome  ?? "N/A" }}</p>

@@ -15,11 +15,18 @@ class DashboardController extends Controller
      * PROSSIMI 5 APPUNTAMENTI (lezioni future)
      */
     $nextLessons = $user->lessons()
-        ->with('student')
-        ->where('giorno', '>=', now())
-        ->orderBy('giorno')
-        ->limit(5)
-        ->get();
+    ->with('student')
+    ->where(function ($query) {
+        $query->where('giorno', '>', today())
+              ->orWhere(function ($q) {
+                  $q->where('giorno', today())
+                    ->where('ora_fine', '>=', now()->format('H:i:s'));
+              });
+    })
+    ->orderBy('giorno')
+    ->orderBy('ora_inizio')
+    ->limit(5)
+    ->get();
 
     /**
      * STUDENTI CON DEBITI E CREDITI

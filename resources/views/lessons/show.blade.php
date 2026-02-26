@@ -20,33 +20,28 @@ Dettagli Lezione
 
 @section('content')
 
-<div class="flex flex-col gap-6">
 
-    <!-- Prima riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="flex flex-col md:flex-row gap-8">
+    <div class="w-full md:w-[500px] flex flex-col gap-4">
         {{-- Giorno --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Giorno</label>
             <input type="date" value="{{ $lesson->getGiornoFormatted() }}" readonly class="input-field" />
         </div>
 
+        {{-- Orario --}}
         <div class="flex flex-row gap-4">
-            {{-- Ora inizio --}}
             <div class="flex flex-col gap-1 flex-1">
                 <label class="primary-text text-sm font-medium">Ora inizio</label>
                 <input type="time" value="{{ $lesson->getOraInizioFormatted() }}" readonly class="input-field w-full" />
             </div>
 
-            {{-- Ora fine --}}
             <div class="flex flex-col gap-1 flex-1">
                 <label class="primary-text text-sm font-medium">Ora fine</label>
                 <input type="time" value="{{ $lesson->getOraFineFormatted() }}" readonly class="input-field w-full" />
             </div>
         </div>
-    </div>
 
-    <!-- Seconda riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {{-- Luogo --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Luogo</label>
@@ -60,12 +55,12 @@ Dettagli Lezione
         </div>
     </div>
 
-    <!-- Terza riga -->
-    <div class="flex flex-col gap-1">
+     <div class="w-full flex flex-col gap-1">
         <label class="primary-text text-sm font-medium">Argomento</label>
-        <textarea rows="4" readonly class="input-field w-full">{{ $lesson->argomento ?? '' }}</textarea>
+        <textarea rows="11" readonly class="input-field w-full">{{ $lesson->argomento ?? '' }}</textarea>
     </div>
 
 </div>
+
 
 @endsection

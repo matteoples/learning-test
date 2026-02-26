@@ -94,9 +94,9 @@ una nuova lezione per il dato studente.
                             </div>
                             <div class="pr-5 flex-1">
                                 <p class="primary-text text-lg font-medium">{{ $lesson->student->getNomeCognome() }}</p>
-                                <p class="primary-text text-sm ">{{ $lesson->materia  ?? "N/A" }}
-                                    @isset($lesson->argomento) - {{ $lesson->argomento}} @endisset
-                                </p>
+                                <p class="primary-text text-sm "> {{ $lesson->descrizione() }} </p>
+
+                                
                                 
                             </div>
                         </div>

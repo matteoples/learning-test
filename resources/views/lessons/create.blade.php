@@ -25,77 +25,70 @@ Nuova Lezione
 <form id="create-lesson-form" action="{{ route('lessons.store', $student) }}" method="POST" class="flex flex-col gap-6">
     @csrf
 
-    <!-- Prima riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Giorno --}}
-        <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">
-                Giorno <span class="text-red-500">*</span>
-            </label>
-            <input type="date" name="giorno" required value="{{ now()->format('Y-m-d') }}" class="input-field">
-        </div>
+    <div class="flex flex-col md:flex-row gap-8">
+        <div class="w-full md:w-[500px] flex flex-col gap-4">
 
-        <div class="flex flex-row gap-4">
-            {{-- Ora inizio --}}
-            <div class="flex flex-col gap-1 flex-1">
+            {{-- Giorno --}}
+            <div class="flex flex-col gap-1">
                 <label class="primary-text text-sm font-medium">
-                    Ora inizio <span class="text-red-500">*</span>
+                    Giorno <span class="text-red-500">*</span>
                 </label>
-                <input type="time" name="ora_inizio" required value="10:00" class="input-field w-full">
+                <input type="date" name="giorno" required value="{{ now()->format('Y-m-d') }}" class="input-field">
             </div>
 
-            {{-- Ora fine --}}
-            <div class="flex flex-col gap-1 flex-1">
-                <label class="primary-text text-sm font-medium">
-                    Ora fine <span class="text-red-500">*</span>
-                </label>
-                <input type="time" name="ora_fine" required value="11:00" class="input-field w-full">
+            {{-- Orari --}}
+            <div class="flex flex-row gap-4">
+                <div class="flex flex-col gap-1 flex-1">
+                    <label class="primary-text text-sm font-medium">
+                        Ora inizio <span class="text-red-500">*</span>
+                    </label>
+                    <input type="time" name="ora_inizio" required value="10:00" class="input-field w-full">
+                </div>
+
+                <div class="flex flex-col gap-1 flex-1">
+                    <label class="primary-text text-sm font-medium">
+                        Ora fine <span class="text-red-500">*</span>
+                    </label>
+                    <input type="time" name="ora_fine" required value="11:00" class="input-field w-full">
+                </div>
             </div>
+
+            {{-- Luogo --}}
+            <div class="flex flex-col gap-1">
+                <label class="primary-text text-sm font-medium">Luogo</label>
+                <select name="luogo" class="input-field">
+                    <option value="">---</option>
+
+                    @foreach($luoghi as $luogo)
+                        <option value="{{ $luogo }}" {{ old('luogo') === $luogo ? 'selected' : '' }}>
+                            {{ $luogo }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Materia --}}
+            <div class="flex flex-col gap-1">
+                <label class="primary-text text-sm font-medium">
+                    Materia <span class="text-red-500">*</span>
+                </label>
+                <select name="subject_id" class="input-field" required>
+                    <option value="">---</option>
+                    @foreach($userSubjects as $subject)
+                        <option value="{{ $subject->id }}">{{ $subject->nome }}</option>
+                    @endforeach
+                </select>
+            </div>
+
         </div>
+
+        <div class="w-full flex flex-col gap-1">
+            <label class="primary-text text-sm font-medium">Argomento</label>
+            <textarea name="argomento" rows="11" class="input-field w-full"></textarea>
+        </div>
+
     </div>
 
-    <!-- Seconda riga -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Luogo --}}
-        <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Luogo</label>
-            
-            <select name="luogo" class="input-field">
-                <option value="">---</option>
-
-                @php
-                    $luoghi = ['Online', 'Casa Tutor', 'Casa Cliente', 'Biblioteca', 'Altro'];
-                @endphp
-
-                @foreach($luoghi as $luogo)
-                    <option value="{{ $luogo }}" {{ old('luogo') === $luogo ? 'selected' : '' }}>
-                        {{ $luogo }}
-                    </option>
-                @endforeach
-            </select>
-
-        </div>
-
-        {{-- Materia --}}
-        <div class="flex flex-col gap-1">
-            <label class="primary-text text-sm font-medium">Materia</label>
-            <select name="subject_id" class="input-field" required>
-                <option value="">---</option>
-
-                @foreach($userSubjects as $subject)
-                    <option value="{{ $subject->id }}">
-                        {{ $subject->nome }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-
-    <!-- Terza riga -->
-    <div class="flex flex-col gap-1">
-        <label class="primary-text text-sm font-medium">Argomento</label>
-        <textarea name="argomento" rows="4" class="input-field w-full"></textarea>
-    </div>
 </form>
 
 @endsection

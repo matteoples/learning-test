@@ -35,10 +35,7 @@ class UpdateLessonOnGoogleCalendar
 
         // Costruisci titolo e descrizione
         $title = ($lesson->student->nome ?? '') . ' ' . ($lesson->student->cognome ?? '');
-        $description = $lesson->subject->nome ?? '';
-        if ($lesson->argomento) {
-            $description .= ' - ' . $lesson->argomento;
-        }
+        $description = $lesson->descrizione();
 
 
         if ($lesson->google_event_id) {

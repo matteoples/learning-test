@@ -31,11 +31,7 @@ class CreateLessonOnGoogleCalendar
 
         $service = new GoogleAccountService($user);
         $title = $lesson->student->nome . " " . $lesson->student->cognome;
-        $description = $lesson->subject->nome;
-
-        if ($lesson->argomento) {
-            $description .= " - " . $lesson->argomento;
-        }
+        $description = $lesson->descrizione();
 
         $googleEvent = $service->createEvent(
             $user->google_calendar_id,
