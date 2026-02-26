@@ -153,4 +153,6 @@
 }
 
 
-
+.hidden-button {
+    display: none !important;
+}

@@ -9,22 +9,30 @@ class Button extends Component
     public ?string $href;
     public string $variant;
     public ?string $icon;
+    public ?string $form;   // 👈 AGGIUNTO
+    public string $type;    // 👈 AGGIUNTO
 
     /**
-     * @param string|null $href URL del link (opzionale)
+     * @param string|null $href
      * @param string $variant primary|secondary|inline
-     * @param string|null $icon nome dell'icona (opzionale)
+     * @param string|null $icon
+     * @param string|null $form id del form da collegare
+     * @param string $type button|submit|reset
      */
-    public function __construct(?string $href = null, string $variant = 'primary', ?string $icon = null)
-    {
+    public function __construct(
+        ?string $href = null,
+        string $variant = 'primary',
+        ?string $icon = null,
+        ?string $form = null,
+        string $type = 'button'
+    ) {
         $this->href = $href;
         $this->variant = $variant;
         $this->icon = $icon;
+        $this->form = $form;      // 👈
+        $this->type = $type;      // 👈
     }
 
-    /**
-     * Restituisce le classi Tailwind di base per ogni variante
-     */
     public function classes(): string
     {
         return match($this->variant) {

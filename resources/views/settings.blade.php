@@ -62,9 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
             cb.disabled = true;
             cb.closest('.card').classList.remove('editable'); // rimuove il cursore pointer
         });
-        editBtn.classList.remove('hidden');
-        saveBtn.classList.add('hidden');
-        cancelBtn.classList.add('hidden');
+        editBtn.classList.remove('hidden-button');
+        saveBtn.classList.add('hidden-button');
+        cancelBtn.classList.add('hidden-button');
     }
 
     // Modalità Edit
@@ -73,9 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
             cb.disabled = false;
             cb.closest('.card').classList.add('editable'); // aggiunge il cursore pointer
         });
-        editBtn.classList.add('hidden');
-        saveBtn.classList.remove('hidden');
-        cancelBtn.classList.remove('hidden');
+        editBtn.classList.add('hidden-button');
+        saveBtn.classList.remove('hidden-button');
+        cancelBtn.classList.remove('hidden-button');
     }
 
     // Inizializza in Read mode
@@ -130,13 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <h2 class="primary-text text-xl font-semibold">Materie che insegni</h2>
 
             <div class="flex gap-2">
-                <button id="edit-btn" type="button" class="primary-button px-4 py-2">Modifica</button>
-                
-                <button id="cancel-btn" type="button" class="secondary-button px-4 py-2 hidden">Annulla</button>
-
-                <button id="save-btn" type="submit" form="subjects-form"
-                    class="primary-button px-4 py-2 hidden">Salva</button>
-
+                <x-button id="edit-btn" type="button" variant="primary" icon="edit"> Modifica </x-button>
+                <x-button id="cancel-btn" type="button" variant="secondary"> Annulla </x-button>
+                <x-button id="save-btn" type="submit" form="subjects-form" variant="primary"> Salva </x-button>
             </div>
         </div>
 
