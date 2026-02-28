@@ -155,8 +155,10 @@ use App\Enums\FontWeight as FW;
                             </x-box-container>
                         </a>
                     @empty
-                        <div class="p-4">
-                            <x-label> Non ci sono lezioni per questo studente da mostrare. </x-label>
+                        <div class="col-span-1 xl:col-span-2 2xl:col-span-3 p-4 text-center">
+                            <x-label>
+                                Non ci sono lezioni per questo studente da mostrare.
+                            </x-label>
                         </div>
                     @endforelse
                 </div>

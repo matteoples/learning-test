@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @php
+    use App\Enums\FontWeight as FW;
     $studentName = $student->getNomeCognome();
     $modalitaOptions = ['Contanti','Bonifico','PayPal','Satispay','Revolut'];
 @endphp
@@ -12,8 +13,8 @@ Nuovo Pagamento <span class="hidden md:inline"> per {{ $studentName }}</span>
 
 @section('action-buttons')
 <x-button type="submit" form="create-payment-form"> 
-    <span class="md:hidden">Salva</span>
-    <span class="hidden md:inline">Salva Modifiche</span>
+    <span class="md:hidden">Aggiungi</span>
+    <span class="hidden md:inline">Aggiungi Pagamento</span>
 </x-button>
 @endsection
 
@@ -31,11 +32,12 @@ Nuovo Pagamento <span class="hidden md:inline"> per {{ $studentName }}</span>
         <!-- BLOCCO 1 -->
         <div class="w-full md:w-[400px] flex flex-col gap-4">
             {{-- Data --}}
+
             <div class="flex flex-col gap-1">
                 <label class="primary-text text-sm font-medium">
                     Data <span class="text-red-500">*</span>
                 </label>
-                <input type="date" name="data" required value="{{ now()->format('Y-m-d') }}" class="input-field">
+                <input type="date" name="data"  value="{{ now()->format('Y-m-d') }}" class="input-field">
             </div>
         
             {{-- Modalità --}}
