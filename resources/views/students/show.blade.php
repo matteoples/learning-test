@@ -27,7 +27,9 @@ use App\Enums\FontWeight as FW;
             <div class="flex justify-between items-center">
                 <x-title> Anagrafica</x-title>
                 <x-button href="{{ route('students.edit', $student) }}" 
-                    variant="primary" icon="edit"> Modifica </x-button>
+                    variant="primary" icon="edit"> 
+                    <span class="lg:hidden 2xl:inline">Modifica</span> 
+                </x-button>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-2 gap-4 mt-4">
@@ -48,7 +50,9 @@ use App\Enums\FontWeight as FW;
             <div class="flex justify-between items-center">
                 <x-title> Pagamenti</x-title>
                 <x-button href="{{ route('payments.create', $student) }}" 
-                    variant="primary" icon="add"> Nuovo </x-button>
+                    variant="primary" icon="add"> 
+                    <span class="lg:hidden 2xl:inline">Nuovo</span> 
+                </x-button>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
@@ -93,11 +97,21 @@ use App\Enums\FontWeight as FW;
 
                 <x-key-value-pair>
                     <x-slot name="key">
-                        <x-text> Totale ore fatte </x-text>
+                        <x-text> Totale ore programmate </x-text>
                     </x-slot>
 
                     <x-slot name="value">
                         <x-text :weight="FW::Semibold"> {{ $student->getTotalLessonsFormatted() }} </x-text>
+                    </x-slot>
+                </x-key-value-pair>
+
+                <x-key-value-pair>
+                    <x-slot name="key">
+                        <x-text> Totale ore già fatte </x-text>
+                    </x-slot>
+
+                    <x-slot name="value">
+                        <x-text :weight="FW::Semibold"> {{ $student->getTotalLessonsCompletedFormatted() }} </x-text>
                     </x-slot>
                 </x-key-value-pair>
             </x-box-container>
@@ -139,7 +153,9 @@ use App\Enums\FontWeight as FW;
                 </div>
 
 
-                <div class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 xl:grid-cols-2 3xl:grid-cols-3 gap-3">
+                    
+
                     @forelse ($student->lessons as $lesson)
                         <a href="{{ route('lessons.show', $lesson) }}" class="block h-full">
 

@@ -111,12 +111,21 @@
     border-color: var(--box-border);
 }
 
+.card {
+    background-color: var(--bg-even);
+    transition: background-color 0.2s;
+}
 
+.card:hover {
+    background-color: var(--bg-hover);
+}
+
+ /*
 .card {
     @apply rounded-lg transition-colors duration-200 border box-border w-full;
     background-color: var(--bg-even);
     border-color: var(--box-border);
-    /* aggiungi hover di default */
+    aggiungi hover di default 
 }
 
 .card:not(.card-selected):hover {
@@ -130,6 +139,10 @@
     border-color: var(--accent-color);
 }
 
+.card-hover:hover {
+    background-color: var(--bg-hover);
+}
+
 .card-selected:hover {
     background-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
 }
@@ -137,6 +150,8 @@
 .card.editable {
     cursor: pointer;
 }
+
+*/
 
 
 .input-field {

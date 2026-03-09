@@ -26,14 +26,14 @@ Dettagli Lezione
         {{-- Giorno --}}
         <div class="flex flex-col gap-1">
             <label class="primary-text text-sm font-medium">Giorno</label>
-            <input type="date" value="{{ $lesson->getGiornoFormatted() }}" disabled readonly class="input-field" />
+            <input type="date" value="{{ $lesson->getGiornoFormatted() }}" disabled readonly class="input-field"/>
         </div>
 
         {{-- Orario --}}
         <div class="flex flex-row gap-4">
             <div class="flex flex-col gap-1 flex-1">
                 <label class="primary-text text-sm font-medium">Ora inizio</label>
-                <input type="time" value="{{ $lesson->getOraInizioFormatted() }}" disabled  readonly class="input-field w-full" />
+                <input type="time" value="{{ $lesson->getOraInizioFormatted() }}" disabled readonly class="input-field w-full" />
             </div>
 
             <div class="flex flex-col gap-1 flex-1">

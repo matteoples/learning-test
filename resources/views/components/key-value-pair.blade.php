@@ -1,6 +1,6 @@
 <div class="w-full flex justify-between items-center">
     {{-- Slot key --}}
-    <div class="flex-1">
+    <div class="flex-2">
         {{ $key }}
     </div>
 

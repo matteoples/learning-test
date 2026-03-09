@@ -11,37 +11,32 @@ class Button extends Component
     public ?string $icon;
     public ?string $form;
     public string $type;
+    public bool $iconOnly;
 
-    /**
-     * @param string|null $href
-     * @param string $variant primary|secondary|inline
-     * @param string|null $icon
-     * @param string|null $form id del form da collegare
-     * @param string $type button|submit|reset
-     */
     public function __construct(
         ?string $href = null,
         string $variant = 'primary',
         ?string $icon = null,
         ?string $form = null,
-        string $type = 'button'
+        string $type = 'button',
+        bool $iconOnly = false,
     ) {
         $this->href = $href;
         $this->variant = $variant;
         $this->icon = $icon;
         $this->form = $form;
         $this->type = $type;
+        $this->iconOnly = $iconOnly;
     }
 
     public function classes(): string
-
     {
         return match($this->variant) {
-            'primary'       => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition primary-color',
-            'destructive'   => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition destructive-color',
-            'secondary'     => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition secondary-color',
-            'inline'        => 'flex items-center justify-center gap-2 px-4 py-2 font-medium inline-color',
-            default         => 'flex items-center justify-center gap-2 rounded-lg transition primary-color',
+            'primary'     => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 primary-color',
+            'destructive' => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 destructive-color',
+            'secondary'   => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 secondary-color',
+            'inline'      => 'inline-flex items-center gap-1 font-medium whitespace-nowrap transition hover:underline focus:outline-none inline-color',
+            default       => 'flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 primary-color',
         };
     }
 

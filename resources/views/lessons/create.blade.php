@@ -12,7 +12,7 @@ Nuova Lezione
 @section('back-button-route', route('students.show', $student))
 
 @section('action-buttons')
-<x-button type="submit" form="create-payment-form"> 
+<x-button type="submit" form="create-lesson-form"> 
     <span class="md:hidden">Aggiungi</span>
     <span class="hidden md:inline">Aggiungi Lezione</span>
 </x-button>

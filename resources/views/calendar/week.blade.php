@@ -75,14 +75,18 @@ $today = Carbon::today();
                                 {{ $lesson->getOraInizioFormatted() }} - {{ $lesson->getOraFineFormatted() }}
                             </x-label>
 
-                            <x-text :weight="FW::Semibold" class="hidden xl:block">
+                            
+
+                            <x-headline>
                                 {{ $lesson->student->getNomeCognome() ?? 'Studente senza nome' }}
+                                
+                            </x-headline>
+
+                            <x-text :weight="FW::Normal">
+                                {{ $lesson->subject->nome ?? 'Lezione senza materia' }}
                             </x-text>
                     
-                            {{-- Iniziali (mobile) --}}
-                            <x-text :weight="FW::Semibold" class="xl:hidden w-full">
-                                {{ $lesson->student->getIniziali() ?? 'SN' }}
-                            </x-text>
+                            
                         </x-box-container>
                     </a>
                 @endforeach

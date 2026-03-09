@@ -103,10 +103,37 @@ class Student extends Model
         return $totalHours;
     }
 
+    public function getTotalLessonsCompleted() {
+        $totalHours = $this->lessons
+            ->filter(fn($lesson) => Carbon::parse($lesson->giorno)->isPast())
+            ->sum(function ($lesson) {
+                $start = Carbon::parse($lesson->ora_inizio);
+                $end = Carbon::parse($lesson->ora_fine);
+                return $start->floatDiffInHours($end);
+            });
+
+        return $totalHours;
+    }
+
     public function getTotalPayments() {
         return floor($this->payments()->sum('importo'));
     }
 
+
+    public function getTotalLessonsCompletedFormatted() {
+        $totalHours =  $this->getTotalLessonsCompleted();
+
+        // parte intera delle ore
+        $hours = floor($totalHours);
+
+        // minuti ricavati dalla parte decimale
+        $minutes = round(($totalHours - $hours) * 60);
+
+        if ($minutes==0) {
+            return "{$hours}h";
+        }
+        return "{$hours}h {$minutes}min";
+    }
 
     public function getTotalLessonsFormatted() {
         $totalHours =  $this->getTotalLessons();

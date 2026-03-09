@@ -27,8 +27,8 @@ use App\Enums\FontWeight as FW;
 
 
         <a href="{{ url('/dashboard') }}" class="w-full block px-2">
-            <x-box-container class="sm:justify-start {{ Request::is('dashboard*') ? 'bg-even box-border border' : 'bg-odd' }}">
-                <div class="flex flex-row items-center gap-2">
+            <x-box-container class="xl:justify-start {{ Request::is('dashboard*') ? 'bg-even box-border border' : 'bg-odd' }}">
+                <div class="flex flex-row items-center justify-center md:justify-start gap-2">
                     <x-icon name="dashboard" color="var(--primary-text)" />
                     <x-text class="hidden xl:inline">Dashboard</x-text>
                 </div>
@@ -36,8 +36,8 @@ use App\Enums\FontWeight as FW;
         </a>
 
         <a href="{{ url('/students') }}" class="w-full block px-2">
-            <x-box-container class="sm:justify-start {{ Request::is('students*') ? 'bg-even box-border border' : 'bg-odd' }}">
-                <div class="flex flex-row items-center gap-2">
+            <x-box-container class="xl:justify-start {{ Request::is('students*') ? 'bg-even box-border border' : 'bg-odd' }}">
+                <div class="flex flex-row items-center justify-center md:justify-start gap-2">
                     <x-icon name="students" color="var(--primary-text)" />
                     <x-text class="hidden xl:inline">Studenti</x-text>
                 </div>
@@ -45,8 +45,8 @@ use App\Enums\FontWeight as FW;
         </a>
 
         <a href="{{ url('/calendar') }}" class="w-full block px-2">
-            <x-box-container class="sm:justify-start {{ Request::is('calendar*') ? 'bg-even box-border border' : 'bg-odd' }}">
-                <div class="flex flex-row items-center gap-2">
+            <x-box-container class="xl:justify-start {{ Request::is('calendar*') ? 'bg-even box-border border' : 'bg-odd' }}">
+                <div class="flex flex-row items-center justify-center md:justify-start gap-2">
                     <x-icon name="calendar" color="var(--primary-text)" />
                     <x-text class="hidden xl:inline">Calendario</x-text>
                 </div>
@@ -54,8 +54,8 @@ use App\Enums\FontWeight as FW;
         </a>
 
         <a href="{{ url('/settings') }}" class="w-full block px-2">
-            <x-box-container class="sm:justify-start {{ Request::is('settings*') ? 'bg-even box-border border' : 'bg-odd' }}">
-                <div class="flex flex-row items-center gap-2">
+            <x-box-container class="xl:justify-start {{ Request::is('settings*') ? 'bg-even box-border border' : 'bg-odd' }}">
+                <div class="flex flex-row items-center justify-center md:justify-start gap-2">
                     <x-icon name="settings" color="var(--primary-text)"/>
                     <x-text class="hidden xl:inline">Impostazioni</x-text>
                 </div>

@@ -5,11 +5,9 @@
 
 @section('action-buttons')
 <div class="flex items-center gap-4">
-    <a href="{{ route('students.create') }}">
-        <x-button icon="add">
-            <x-text class="hidden sm:inline"> Nuovo Studente </x-text>
-        </x-button>
-    </a>
+    <x-button href="{{ route('students.create') }}" icon="add">
+        <span class="hidden sm:inline">Nuovo Studente</span>
+    </x-button>
 </div>
 @endsection
 
