@@ -24,7 +24,7 @@ Route::get('/auth/redirect', function () {
     $client->setRedirectUri(route('auth.callback'));
     
     $client->setAccessType('offline'); // per ottenere refresh token
-    $client->setPrompt('consent');     // forza consenso ogni volta
+    // $client->setPrompt('consent');     // RIMOSSO: causava problemi di sessione
 
     $client->setScopes([
         'openid',
@@ -47,7 +47,8 @@ Route::get('/auth/callback', function () {
     $client->setClientSecret(config('services.google.client_secret'));
     $client->setRedirectUri(route('auth.callback'));
     $client->setAccessType('offline');
-    $client->setPrompt('consent');
+    // $client->setPrompt('consent');     // RIMOSSO: causava problemi di sessione
+
     $client->setScopes([
         'openid',
         'profile',
@@ -79,6 +80,20 @@ Route::get('/auth/callback', function () {
         'google_refresh_token' => $token['refresh_token'] ?? null,
     ]);
 
+
+    // Login FIRST - before using GoogleAccountService
+    Auth::login($user);
+
+    // Then initialize service only if calendar not set
+    if (!$user->google_calendar_id) {
+        $googleService = new GoogleAccountService($user);
+        $calendarId = $googleService->createCalendar('Ripetiflow');
+        $user->update(['google_calendar_id' => $calendarId]);
+    }
+
+    return redirect('/dashboard');
+
+    /*
     // Inizializza il service per Calendar (se serve)
     $googleService = new GoogleAccountService($user);
     if (!$user->google_calendar_id) {
@@ -90,6 +105,7 @@ Route::get('/auth/callback', function () {
     Auth::login($user);
 
     return redirect('/dashboard');
+    */
 })->name('auth.callback');
 
 Route::middleware('auth')->group(callback: function(): void {
@@ -163,5 +179,8 @@ Route::post('/google/reset', function () {
 
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect('/dashboard');
+    }
     return view('welcome');
 });

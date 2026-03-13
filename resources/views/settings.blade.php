@@ -204,6 +204,24 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 
+    <div class="section p-6 flex flex-col gap-4 h-full">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="primary-text text-xl font-semibold">Esci</h2>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-start justify-between w-full mx-auto py-4">
+            <div class="flex flex-col w-full mb-4 md:mb-0">
+                <x-headline> Logout </x-headline>
+                <x-label> Esci dal tuo account e tornare alla pagina di login.</x-label>
+            </div>
+
+            <form action="{{ route('logout') }}" method="POST" class="w-full md:w-auto">
+                @csrf
+                <x-button type="submit" variant="destructive" icon="logout"> Esci </x-button>
+            </form>
+        </div>
+    </div>
+
 
 
 </main>
