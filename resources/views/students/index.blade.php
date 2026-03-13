@@ -19,10 +19,10 @@
     @forelse($students as $student)
         <a href="{{ route('students.show', $student) }}" class="block">
             
-            <x-box-container>
+            <x-card clickable>
                 <x-headline> {{ $student->getNomeCognome() }} </x-headline>
                 <x-label> Classe: {{ $student->classe ?? '-' }} </x-label>
-            </x-box-container>
+            </x-card>
             
         </a>
     @empty

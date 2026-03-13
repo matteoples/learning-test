@@ -18,6 +18,7 @@ class GoogleAccountService
     protected GoogleClient $client;
     protected GoogleCalendar $calendarService;
     protected User $user;
+    protected bool $isConnected = false;
 
     public function __construct(User $user)
     {
@@ -32,9 +33,21 @@ class GoogleAccountService
             GoogleCalendar::CALENDAR
         ]);
 
-        $this->setAccessToken();
+        try {
+            $this->setAccessToken();
+            $this->isConnected = true;
+        } catch (\Exception $e) {
+            $this->isConnected = false;
+        }
 
-        $this->calendarService = new GoogleCalendar($this->client);
+        if ($this->isConnected) {
+            $this->calendarService = new GoogleCalendar($this->client);
+        }
+    }
+
+    public function isConnected(): bool
+    {
+        return $this->isConnected;
     }
 
     protected function setAccessToken(): void

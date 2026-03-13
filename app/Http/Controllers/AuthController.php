@@ -17,6 +17,7 @@ class AuthController extends Controller
         $client->setRedirectUri(route('auth.callback'));
         
         $client->setAccessType('offline');
+        $client->setPrompt('consent');
         $client->setScopes([
             'openid',
             'profile',
@@ -34,6 +35,7 @@ class AuthController extends Controller
         $client->setClientSecret(config('services.google.client_secret'));
         $client->setRedirectUri(route('auth.callback'));
         $client->setAccessType('offline');
+        $client->setPrompt('consent');
         $client->setScopes([
             'openid',
             'profile',
@@ -79,5 +81,24 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function reconnectGoogle()
+    {
+        $client = new \Google\Client();
+        $client->setClientId(config('services.google.client_id'));
+        $client->setClientSecret(config('services.google.client_secret'));
+        $client->setRedirectUri(route('auth.callback'));
+        
+        $client->setAccessType('offline');
+        $client->setPrompt('consent');
+        $client->setScopes([
+            'openid',
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/calendar',
+        ]);
+
+        return redirect($client->createAuthUrl());
     }
 }

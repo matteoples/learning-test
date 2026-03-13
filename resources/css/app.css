@@ -55,6 +55,9 @@
     .box-border {
         border-color: var(--box-border);
     }
+    .border-accent {
+        border-color: var(--accent-color) !important;
+    }
     .primary-text {
         color: var(--primary-text);
     }
@@ -66,6 +69,9 @@
     }
     .bg-accent-hover {
         background-color: color-mix(in srgb, var(--accent-color-hover) 30%, transparent) !important;
+    }
+    .card-hover:hover {
+        background-color: var(--bg-hover) !important;
     }
 
 }

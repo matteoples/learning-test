@@ -12,10 +12,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/redirect', [AuthController::class, 'redirectToGoogle'])->name('auth.redirect');
+Route::get('/auth/reconnect', [AuthController::class, 'reconnectGoogle'])->middleware('auth')->name('auth.reconnect');
 Route::get('/auth/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.callback');
 
 Route::middleware('auth')->group(callback: function(): void {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('set.sourceURL');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
@@ -24,7 +25,8 @@ Route::middleware('auth')->group(callback: function(): void {
     Route::get('/students/import', [StudentController::class, 'showImportForm'])->name('students.import.form');
     Route::post('/students/import', [StudentController::class, 'importFromJson'])->name('students.import');
 
-    Route::resource('students', StudentController::class);
+    Route::get('/students', [StudentController::class, 'index'])->name('students.index')->middleware('set.sourceURL');
+    Route::resource('students', StudentController::class)->except(['index']);
 
     Route::get('/lessons', [LessonController::class, 'index'])->name('lessons.index');
     Route::get('/students/{student}/lessons/create', [LessonController::class, 'create'])->name('lessons.create');
@@ -41,7 +43,7 @@ Route::middleware('auth')->group(callback: function(): void {
     Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
     Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
 
-    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index')->middleware('set.sourceURL');
 });
 
 Route::post('/google/sync', [GoogleSyncController::class, 'sync'])->middleware('auth')->name('google.sync');

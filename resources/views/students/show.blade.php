@@ -5,7 +5,6 @@ use App\Enums\FontWeight as FW;
 @extends('layouts.app')
 
 @section('page-title', 'Dettagli Studente')
-@section('back-button-route', route('students.index'))
 
 @section('action-buttons')
 <div class="flex gap-2">
@@ -58,7 +57,7 @@ use App\Enums\FontWeight as FW;
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                 @forelse ($student->payments as $payment)
                     <a href="{{ route('payments.show', $payment) }}" class="block h-full">
-                        <x-box-container>
+                        <x-card clickable size="small">
                             <x-key-value-pair>
                                 <x-slot name="key">
                                     <x-text> {{ $payment->getTextGiornoFormatted() }} </x-text>
@@ -68,7 +67,7 @@ use App\Enums\FontWeight as FW;
                                     <x-headline :weight="FW::Bold"> € {{ (int) $payment->importo }} </x-headline>
                                 </x-slot>
                             </x-key-value-pair>
-                        </x-box-container>
+                        </x-card>
                     </a>
                 @empty
                     <div class="p-4">
@@ -159,7 +158,7 @@ use App\Enums\FontWeight as FW;
                     @forelse ($student->lessons as $lesson)
                         <a href="{{ route('lessons.show', $lesson) }}" class="block h-full">
 
-                            <x-box-container class="h-full">
+                            <x-card clickable class="h-full">
                                 <div class="flex justify-between items-center">
                                     <x-label> {{ $lesson->getTextGiornoFormatted() }} - {{ $lesson->getOraInizioFormatted() }} : {{ $lesson->getOraFineFormatted() }}</x-label>
                                     <x-text> {{ $lesson->getDurataFormatted() }} </x-text>
@@ -168,7 +167,7 @@ use App\Enums\FontWeight as FW;
                                     <x-headline>{{ $lesson->subject->nome  ?? "N/A" }}</x-headline>
                                     <x-text> {{ $lesson->argomento }} </x-text>
                                 </div>
-                            </x-box-container>
+                            </x-card>
                         </a>
                     @empty
                         <div class="col-span-1 xl:col-span-2 2xl:col-span-3 p-4 text-center">

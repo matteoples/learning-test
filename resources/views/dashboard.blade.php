@@ -84,16 +84,18 @@ una nuova lezione per il dato studente.
         <x-box-container size="large">
             <x-title> Prossimi Appuntamenti</x-title>
             @forelse($nextLessons as $lesson)
-                <x-box-container>
-                    <div class="flex justify-between items-center mb-2">
-                        <x-label> {{ $lesson->getTextGiornoFormatted() }} - {{ $lesson->getOraInizioFormatted() }} : {{ $lesson->getOraFineFormatted() }}</x-label>
-                        <x-text> {{ $lesson->getDurataFormatted() }} </x-text>
-                    </div>
-                    <div class="pr-5 flex-1">
-                        <x-headline>{{ $lesson->student->getNomeCognome() }}</x-headline>
-                        <x-text> {{ $lesson->descrizione() }} </x-text>
-                    </div>
-                </x-box-container>
+                <a href="{{ route('lessons.show', $lesson) }}">
+                    <x-card clickable>
+                        <div class="flex justify-between items-center mb-2">
+                            <x-label> {{ $lesson->getTextGiornoFormatted() }} - {{ $lesson->getOraInizioFormatted() }} : {{ $lesson->getOraFineFormatted() }}</x-label>
+                            <x-text> {{ $lesson->getDurataFormatted() }} </x-text>
+                        </div>
+                        <div class="pr-5 flex-1">
+                            <x-headline>{{ $lesson->student->getNomeCognome() }}</x-headline>
+                            <x-text> {{ $lesson->descrizione() }} </x-text>
+                        </div>
+                    </x-card>
+                </a>
             @empty
                 <x-label> Nessun prossimo appuntamento. </x-label>
             @endforelse
@@ -107,7 +109,7 @@ una nuova lezione per il dato studente.
                 <div class="flex flex-col gap-2">
                     @forelse($debts as $student)
                         <a href="{{ route('payments.create', ['student' => $student->id]) }}">
-                            <x-box-container>
+                            <x-card clickable>
                                 <x-key-value-pair>
                                     <x-slot name="key">
                                         <x-text> {{ $student->getNomeCognome() }} </x-text>
@@ -117,7 +119,7 @@ una nuova lezione per il dato studente.
                                         <x-headline :weight="FW::Bold" color="red"> € {{ abs($student->saldo()) }} </x-headline>
                                     </x-slot>
                                 </x-key-value-pair>
-                            </x-box-container>
+                            </x-card>
                         </a>
                     @empty
                         <x-label> Nessun debito. </x-label>
@@ -130,7 +132,7 @@ una nuova lezione per il dato studente.
                 <x-title> Crediti </x-title>
                 @forelse($credits as $student)
                         <a href="{{ route('lessons.create', ['student' => $student->id]) }}">
-                            <x-box-container>
+                            <x-card clickable>
                                 <x-key-value-pair>
                                     <x-slot name="key">
                                         <x-text> {{ $student->getNomeCognome() }} </x-text>
@@ -140,7 +142,7 @@ una nuova lezione per il dato studente.
                                         <x-headline :weight="FW::Bold" color="green"> € {{ abs($student->saldo()) }} </x-headline>
                                     </x-slot>
                                 </x-key-value-pair>
-                            </x-box-container>
+                            </x-card>
                         </a>
                     @empty
                         <x-label> Nessun credito. </x-label>

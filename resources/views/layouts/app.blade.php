@@ -68,8 +68,27 @@ use App\Enums\FontWeight as FW;
     <!-- Contenuto principale -->
     <main class="flex-1 sm:pl-[60px] xl:pl-[180px] py-6 flex flex-col gap-6">
 
-        @hasSection('back-button-route')
-            <a href="@yield('back-button-route')" class="secondary-button self-start">
+        @php
+            $currentRoute = Route::currentRouteName();
+            $hideBackButton = in_array($currentRoute, ['dashboard', 'students.index', 'calendar.index','settings']);
+            
+            if (!$hideBackButton) {
+                $referer = request()->header('referer');
+                $host = request()->getHost();
+                $sourceUrl = session('sourceURL');
+                
+                if ($sourceUrl) {
+                    $backUrl = $sourceUrl;
+                } elseif ($referer && str_contains($referer, $host)) {
+                    $backUrl = $referer;
+                } else {
+                    $backUrl = route('students.index');
+                }
+            }
+        @endphp
+        
+        @if(!$hideBackButton)
+            <a href="{{ $backUrl }}" class="secondary-button self-start">
                 <x-button variant="secondary" icon="back"> Indietro </x-button>
             </a>
         @endif

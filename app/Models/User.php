@@ -69,5 +69,15 @@ class User extends Authenticatable
         return $this->belongsToMany(Subject::class);
     }
 
+    public function hasGoogleCalendar(): bool
+    {
+        return !empty($this->google_token) && !empty($this->google_refresh_token);
+    }
+
+    public function isGoogleConnected(): bool
+    {
+        return !empty($this->google_token);
+    }
+
 
 }

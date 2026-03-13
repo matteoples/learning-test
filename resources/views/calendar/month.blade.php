@@ -72,7 +72,7 @@
                 @foreach ($dayLessons as $lesson)
                 
                     <a href="{{ route('lessons.show', $lesson->id) }}">
-                        <x-box-container size="small">
+                        <x-card clickable size="small">
                             <x-label class="hidden xl:block">
                                 {{ $lesson->getOraInizioFormatted() }} - {{ $lesson->getOraFineFormatted() }}
                             </x-label>
@@ -85,7 +85,7 @@
                             <x-text :weight="FW::Semibold" class="xl:hidden w-full">
                                 {{ $lesson->student->getIniziali() ?? 'SN' }}
                             </x-text>
-                        </x-box-container>
+                        </x-card>
                     </a>
 
                 @endforeach

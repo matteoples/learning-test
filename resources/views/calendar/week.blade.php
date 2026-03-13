@@ -70,7 +70,7 @@ $today = Carbon::today();
             <div class="mt-5 flex flex-col gap-2 overflow-y-auto pb-6">
                 @foreach ($dayLessons as $lesson)
                     <a href="{{ route('lessons.show', $lesson->id) }}">
-                        <x-box-container size="small">
+                        <x-card clickable size="small">
                             <x-label class="hidden xl:block">
                                 {{ $lesson->getOraInizioFormatted() }} - {{ $lesson->getOraFineFormatted() }}
                             </x-label>
@@ -87,7 +87,7 @@ $today = Carbon::today();
                             </x-text>
                     
                             
-                        </x-box-container>
+                        </x-card>
                     </a>
                 @endforeach
             </div>
